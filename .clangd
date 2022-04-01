@@ -1,0 +1,6 @@
+CompileFlags:
+    Add:
+        - -std=c++20
+        - -Wall
+        - -I./external/bigngine/include/
+        - -I./external/bigngine/include/external/FreeType/include/

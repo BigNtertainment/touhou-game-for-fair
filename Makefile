@@ -8,6 +8,7 @@ BLDDIR := build
 EXTDIR := $(SRCDIR)/external
 
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
+GLAD := $(SRCDIR)/external/glad/glad.c
 OBJECTS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
 BUILD := $(BLDDIR)/$(NAME)
 DLLS := $(wildcard $(BLDDIR)/*.dll)
@@ -15,14 +16,14 @@ DLLS := $(wildcard $(BLDDIR)/*.dll)
 CFLAGS := 	-std=c++20 \
 			$(patsubst %,-I%,$(wildcard $(EXTDIR)/*/include)) \
 			-I$(EXTDIR)/bigngine/include/external/FreeType/include \
-			-Wall
+			-Wall -v
 LDFLAGS := $(patsubst %,-L%,$(wildcard $(EXTDIR)/*/lib)) $(patsubst $(BLDDIR)/%.dll,-l%,$(DLLS))
 
 output: $(OBJECTS)
-	$(CC) $(LDFLAGS) $< -o $(BUILD)
+	$(CC) $(LDFLAGS) $< $(GLAD) -o $(BUILD)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	[ -d $(OBJDIR) ] || mkdir $(OBJDIR)
+	$(shell IF NOT EXIST $(OBJDIR) mkdir $(OBJDIR))
 	$(CC) $(CFLAGS) -c $< -o "$@"
 
 make run: $(BUILD)
@@ -30,7 +31,9 @@ make run: $(BUILD)
 
 .PHONY: clean
 clean:
-	del "$(OBJECTS)"
-	ifneq ("$(wildcard $(BUILD))","")
-		del "$(BUILD)"
-	endif
+	$(foreach OBJECT,$(OBJECTS),$(subst /,\,del "$(OBJECTS)"))
+# del "$(patsubst %/%,%\%,$(OBJECTS))"
+# $(foreach OBJECT,$(OBJECTS),$(shell del "$(OBJECTS)"))
+# ifneq ("$(wildcard $(BUILD))","")
+# 		del "$(BUILD)"
+# endif
