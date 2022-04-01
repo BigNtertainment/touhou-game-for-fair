@@ -22,7 +22,11 @@ output: $(OBJECTS)
 	$(CC) $(LDFLAGS) $< -o $(BUILD)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	$(CC) $(CFLAGS) -c -o $@ $<
+	[ -d $(OBJDIR) ] || mkdir $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -o "$@"
+
+make run: $(BUILD)
+	$(BUILD)
 
 .PHONY: clean
 clean:
