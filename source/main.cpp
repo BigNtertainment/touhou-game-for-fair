@@ -19,12 +19,13 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 		[game](BigNgine::Scene* scene) {
 			// GAME AREA
 			const float gameAreaVerticalMargin = 20.f;
-			const float gameAreaHorizontalMargin = 20.f;
+			const float gameAreaHorizontalMargin = 50.f;
+			const float gameAreaWidth = 700.f;
 
 			auto* gameArea = new BigNgine::Entity(
-				BigNgine::Vector2(gameAreaVerticalMargin - game->GetWindowWidth() / 2.f, gameAreaHorizontalMargin - game->GetWindowHeight() / 2.f),
+				BigNgine::Vector2( - game->GetWindowWidth() / 2.f, gameAreaVerticalMargin - game->GetWindowHeight() / 2.f),
 				0.f,
-				BigNgine::Vector2(500.f, game->GetWindowHeight() - 2 * gameAreaVerticalMargin)
+				BigNgine::Vector2(gameAreaWidth, game->GetWindowHeight() - 2 * gameAreaVerticalMargin)
 			);
 
 			gameArea->SetDepth(0.1f);
