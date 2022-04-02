@@ -47,7 +47,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				BigNgine::Vector2(20.f, 20.f)
 			);
 
-			bullet->SetDepth(.1f);
+			bullet->SetDepth(-.1f);
 
 			auto* bulletRenderer = new BigNgine::TextureRendererBehaviour();
 
@@ -58,25 +58,36 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			scene->AddEntity(bullet);
 
 			// PLAYER
-			BigNgine::Entity* player = new BigNgine::Entity(
+			auto* player = new BigNgine::Entity(
 				BigNgine::Vector2(0.f, 0.f),
 				0.f,
 				BigNgine::Vector2(100.f, 100.f)
 			);
-
+			auto* playerCollider = new BigNgine::Entity(
+				BigNgine::Vector2(0.f, 0.f),
+				0.f,
+				BigNgine::Vector2(40.f, 40.f)
+			);
+			playerCollider->SetDepth(0.f);
 			player->SetDepth(0.f);
 
 			auto* renderer = new BigNgine::TextureRendererBehaviour();
 
 			renderer->AddTexture("./assets/img/mariss.png");
 
+			player->AddBehaviour(new BigNgine::FollowBehaviour(playerCollider, player->size/-2.));
 			player->AddBehaviour(renderer);
-			player->AddBehaviour(new Touhou::PlayerMovement(gameArea));
-			auto* playerCollider = new Touhou::CircleColliderBehaviour();
-			player->AddBehaviour(playerCollider);
 
+			auto* playerColliderBehaviour = new Touhou::CircleColliderBehaviour();
+			auto* colliderren = new BigNgine::TextureRendererBehaviour();
 
+			playerCollider->AddBehaviour(new Touhou::PlayerMovement(gameArea));
+			playerCollider->AddBehaviour(playerColliderBehaviour);
+			
+			colliderren->AddTexture("./assets/icon/icon.png");
+			playerCollider->AddBehaviour(colliderren);
 
+			scene->AddEntity(playerCollider);
 			scene->AddEntity(player);
 
 			// DEBUGGER
@@ -92,7 +103,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			debuggerRenderer->SetText("no");
 			scene->AddEntity(debugger);
 
-			playerCollider->SetCallback([debuggerRenderer](Touhou::CircleColliderBehaviour* collider) {
+			playerColliderBehaviour->SetCallback([debuggerRenderer](Touhou::CircleColliderBehaviour* collider) {
 				debuggerRenderer->SetText("yes");
 			});
 
