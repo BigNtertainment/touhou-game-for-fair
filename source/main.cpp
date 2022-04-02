@@ -76,7 +76,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			playerRenderer->AddTexture("./assets/img/mariss.png");
 
 			player->AddBehaviour(new BigNgine::FollowBehaviour(playerCollider, player->size/-2.));
-			player->AddBehaviour(renderer);
+			player->AddBehaviour(playerRenderer);
 
 			auto* playerColliderBehaviour = new Touhou::CircleColliderBehaviour();
 			auto* colliderren = new BigNgine::TextureRendererBehaviour();
