@@ -242,32 +242,32 @@ void BigNgine::TextRendererBehaviour::Destroy()
 	glDeleteProgram(program);
 }
 
-void BigNgine::TextRendererBehaviour::setText(const std::string &_text)
+void BigNgine::TextRendererBehaviour::SetText(const std::string &_text)
 {
 	TextRendererBehaviour::text = _text;
 }
 
-void BigNgine::TextRendererBehaviour::setFontSize(short fontSize)
+void BigNgine::TextRendererBehaviour::SetFontSize(short fontSize)
 {
 	font_size = fontSize;
 }
 
-void BigNgine::TextRendererBehaviour::setMarginTop(short marginTop)
+void BigNgine::TextRendererBehaviour::SetMarginTop(short marginTop)
 {
 	margin_top = marginTop;
 }
 
-void BigNgine::TextRendererBehaviour::setMarginBottom(short marginBottom)
+void BigNgine::TextRendererBehaviour::SetMarginBottom(short marginBottom)
 {
 	margin_bottom = marginBottom;
 }
 
-void BigNgine::TextRendererBehaviour::setFont(const std::string &font)
+void BigNgine::TextRendererBehaviour::SetFont(const std::string &font)
 {
 	TextRendererBehaviour::font = font;
 }
 
-void BigNgine::TextRendererBehaviour::setColor(Vector3 color)
+void BigNgine::TextRendererBehaviour::SetColor(Vector3 color)
 {
 	text_color = color;
 }

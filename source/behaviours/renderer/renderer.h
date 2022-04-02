@@ -115,30 +115,30 @@ namespace BigNgine
 		///@param _text  you want to render
 		///@note Next line character should work fine. Change spacing between lines with SetMarginTop and SetMarginBottom
 		///@default Default set to empty string
-		void setText(const std::string &_text);
+		void SetText(const std::string &_text);
 		
 		///Set bottom margin of text line
 		///@param marginBottom bottom margin of line in pixels
 		///@dafault Default set to 0 pixels
-		void setMarginBottom(short marginBottom);
+		void SetMarginBottom(short marginBottom);
 		
 		///Set top margin of text line
 		///@param marginTop top margin of line in pixels
 		///@dafault Default set to 0 pixels
-		void setMarginTop(short marginTop);
+		void SetMarginTop(short marginTop);
 		
 		///Set font size in pixels
 		///@param fontSize font size in pixels
 		///@default 12 pixels
-		void setFontSize(short fontSize);
+		void SetFontSize(short fontSize);
 		
 		///Set font
 		///@param font path to font from main.exe. IT MUST BE .ttf FILE
 		///@note All font files should be in /assets/fonts/
 		///@default Default set to Jetbrains Mono font in /assets/fonts/ folder
-		void setFont(const std::string &font);
+		void SetFont(const std::string &font);
 
-		void setColor(Vector3 color);
+		void SetColor(Vector3 color);
 	
 	private:
 		FT_Library ft;

@@ -9,17 +9,20 @@ uniform vec2 u_size;
 uniform vec2 u_position;
 uniform int u_time;
 
-vec3 color1 = vec3(0, 0, 0);
+vec3 color1 = vec3(0);
 vec3 color2 = vec3(171, 235, 255);
 vec3 color3 = vec3(61, 101, 145);
 vec3 color4 = vec3(90, 128, 151);
 vec2 sp;
 
+// TODO: VERTICAL MOVEMENT
+
 float noiseSpeed = 10000 * 2;
 float fbmSpeed = 30000 * 4;
+float verticalSpeed = u_time / 10000;
 
 float RGBRange = 255.0;
-int pixelSize = 5;
+int pixelSize = 1;
 
 float plot(vec2 st, float pct){
     return  smoothstep( pct-0.02, pct, st.y) -
@@ -92,10 +95,10 @@ void main() {
     vec2 st = sp.xy/u_resolution;
 
     //  THE PART THAT REALLY MATTERS
-    float clouds = smoothstep(0.4, 1.0, st.y) * 0.8;
-    vec2 cp = st + vec2(u_time / noiseSpeed, 0.0);
+    float clouds = .8;
+    vec2 cp = st + vec2(u_time / noiseSpeed, u_time/2000.);
     float rnd = noise(cp * 7.5);
-    float fbm = fbm((st + vec2(u_time / fbmSpeed, 0.0)) * 6);
+    float fbm = fbm((st + vec2(u_time / fbmSpeed, u_time/2000.)) * 6);
 
 
     vec3 color = (vec3(rnd) * clouds * fbm) + mix(color3 / RGBRange, color4 / RGBRange, st.y);
