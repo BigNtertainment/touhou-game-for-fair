@@ -23,6 +23,17 @@ void BigNgine::Scene::AddEntity(Entity *entity)
 		entity->Start();
 }
 
+void BigNgine::Scene::AddPrefab(Prefab& prefab, void* args[], std::function<void(Entity* creation)> callback) {
+	// Create the entity from the prefab
+	Entity* entity = prefab.Create(args);
+
+	// Add the entity to the scene
+	AddEntity(entity);
+
+	// If a callback was provided, call it
+	callback(entity);
+}
+
 void BigNgine::Scene::AddCallback(Input::Callback *callback)
 {
 	callbacks.push_back(callback);
@@ -72,11 +83,16 @@ void BigNgine::Scene::Update(int deltaTime)
 
 BigNgine::Scene::~Scene()
 {
-	for (auto &entity: entities)
+	for (auto &entity : entities)
 	{
 		delete entity;
 	}
-	
+
+	for (auto &callback : callbacks)
+	{
+		delete callback;
+	}
+
 	delete world;
 	delete gravity;
 	

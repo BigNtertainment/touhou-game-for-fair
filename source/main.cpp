@@ -17,7 +17,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	BigNgine::Game *game = BigNgine::Game::GetInstance();
 
 	BigNgine::Scene* scene = new BigNgine::Scene(
-		[game](BigNgine::Scene* scene) {
+		[game](BigNgine::Scene* scene) -> void {
 			// GAME AREA
 			const float gameAreaVerticalMargin = 20.f;
 			const float gameAreaHorizontalMargin = 50.f;
@@ -71,9 +71,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			playerCollider->SetDepth(0.f);
 			player->SetDepth(0.f);
 
-			auto* renderer = new BigNgine::TextureRendererBehaviour();
+			auto* playerRenderer = new BigNgine::TextureRendererBehaviour();
 
-			renderer->AddTexture("./assets/img/mariss.png");
+			playerRenderer->AddTexture("./assets/img/mariss.png");
 
 			player->AddBehaviour(new BigNgine::FollowBehaviour(playerCollider, player->size/-2.));
 			player->AddBehaviour(renderer);
@@ -108,7 +108,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			});
 
 		},
-		[](BigNgine::Scene* scene, int deltaTime) {
+		[](BigNgine::Scene* scene, int deltaTime) -> void {
 
 		}
 	);

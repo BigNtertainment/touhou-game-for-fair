@@ -3,15 +3,16 @@ SRC := source
 BLD := build
 OBJ := obj
 
-CFLAGS := -std=c++20 -Wall -Wextra -I./$(SRC)/external/Box2D/include \
-		  -I./$(SRC)/external/Box2D/src -I./$(SRC)/external/GLFW/include -I./$(SRC)/external/GLAD \
-		  -I./$(SRC)/external/STBI -I./$(SRC)/external/FreeType/include -I./$(SRC)
+CFLAGS := 	-std=c++20 -Wall -Wextra -I./$(SRC)/external/Box2D/include \
+			-I./$(SRC)/external/Box2D/src -I./$(SRC)/external/GLFW/include -I./$(SRC)/external/GLAD \
+			-I./$(SRC)/external/STBI -I./$(SRC)/external/FreeType/include -I./$(SRC)
 LDFLAGS := -L./$(SRC)/external/GLFW/lib -lglfw3dll -L./$(SRC)/external/FreeType/lib -lfreetype
 
 SOURCES := $(wildcard $(SRC)/*.cpp)
 SOURCES += $(wildcard $(SRC)/global/*/*.cpp)
 SOURCES += $(wildcard $(SRC)/types/*/*.cpp)
 SOURCES += $(wildcard $(SRC)/behaviours/*/*.cpp)
+SOURCES += $(wildcard $(SRC)/prefabs/*/*.cpp)
 SOURCES += $(SRC)/external/GLAD/glad.c
 SOURCES += $(SRC)/external/STBI/stb.cpp
 SOURCES += $(wildcard $(SRC)/external/Box2D/*/*/*.cpp)
