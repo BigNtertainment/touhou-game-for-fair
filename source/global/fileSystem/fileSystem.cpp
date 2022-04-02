@@ -5,6 +5,12 @@ std::string FileSystem::LoadFile(const std::string& path)
 	std::ifstream file(path);
 	std::string result;
 
+	if(!file.is_open())
+	{
+		Logger::Error("Failed to open file: " + path);
+		throw std::runtime_error("Failed to open file: " + path);
+	}
+
 	file.seekg(0, std::ios::end);   
 	result.reserve(file.tellg());
 	file.seekg(0, std::ios::beg);
