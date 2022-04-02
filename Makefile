@@ -1,42 +1,66 @@
 CC := clang++
+C  := clang
+CLANGD := .clangd
 
-NAME := touhou.exe
+CCSTD := c++20
 
-SRCDIR := src
-OBJDIR := obj
+# Recursive wildcard pattern for all files
+rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
+
+EXEC := touhou.exe
+
+SRCDIR := source
 BLDDIR := build
+OBJDIR := obj
 EXTDIR := $(SRCDIR)/external
 
-SOURCES := $(wildcard $(SRCDIR)/*.cpp)
-GLAD := $(SRCDIR)/external/glad/glad.c
-STBI := $(SRCDIR)/external/STBI/stb.cpp
-OBJECTS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
-BUILD := $(BLDDIR)/$(NAME)
-DLLS := $(wildcard $(BLDDIR)/*.dll)
+SOURCES := 	$(call rwildcard,$(SRCDIR),*.cpp) \
+			$(call rwildcard,$(SRCDIR),*.c)
 
-CFLAGS := 	-std=c++20 \
-			$(patsubst %,-I%,$(wildcard $(EXTDIR)/*/include)) \
-			-I$(EXTDIR)/bigngine/include/external/FreeType/include \
-			-Wall
-LDFLAGS := $(patsubst %,-L%,$(wildcard $(EXTDIR)/*/lib)) $(patsubst $(BLDDIR)/%.dll,-l%,$(DLLS))
+OBJECTS := 	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
+OBJECTS := 	$(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(OBJECTS))
 
-output: $(OBJECTS)
-	$(CC) $(LDFLAGS) $< $(GLAD) $(STBI) -o $(BUILD)
+BUILD := $(BLDDIR)/$(EXEC)
 
+INCLUDES := -I$(EXTDIR) \
+			-I$(EXTDIR)/bigngine/ \
+			$(patsubst %,-I%,$(sort $(call rwildcard,$(EXTDIR),*/include/))) \
+			$(patsubst %,-I%,$(sort $(dir $(call rwildcard,$(EXTDIR),*.h)))) \
+			$(patsubst %,-I%../,$(sort $(dir $(call rwildcard,$(EXTDIR),*.h))))
+
+LIBS := $(call rwildcard,$(EXTDIR),*.lib)
+
+FLAGS := -Wall
+CFLAGS := $(FLAGS)
+CCFLAGS := $(FLAGS) --std=$(CCSTD)
+
+LDFLAGS := $(foreach LIB,$(LIBS),-l$(patsubst %.lib,%,$(notdir $(LIB)))) $(foreach LIB,$(LIBS),-L$(dir $(LIB)))
+
+# Rule for linking the .obj files
+$(BUILD): $(OBJECTS)
+	$(CC) $^ $(LDFLAGS) -o $@
+
+# Rule for compiling the .cpp files into .o files
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-ifeq ("$(wildcard $(OBJDIR))","") $(OBJDIR)
-	mkdir $(OBJDIR)
-endif
-	$(CC) $(CFLAGS) -c $< -o "$@"
+	if not exist "$(dir $@)" mkdir "$(dir $@)"
+	$(CC) $(CCFLAGS) -c -o $@ $< $(INCLUDES)
 
-make run: $(BUILD)
-	$(BUILD)
+# Rule for compiling the .c files into .o files
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	if not exist "$(dir $@)" mkdir "$(dir $@)"
+	$(C) $(CFLAGS) -c -o $@ $< $(INCLUDES)
 
-.PHONY: clean
+# Rule for generating the .clangd file
+clangd:
+	echo CompileFlags:> $(CLANGD) \
+	&& echo     Add:>> $(CLANGD) \
+	&& echo $(foreach FLAG,$(CCFLAGS),        - $(FLAG)>> $(CLANGD) && echo) \
+	&& echo $(foreach INCLUDE,$(INCLUDES),        - $(INCLUDE)>> $(CLANGD) && echo) \
+
+# Rule for running the built executable
+run:
+	cd $(BLDDIR) && $(EXEC)
+
+# Rule for cleaning the obj and the build directory
 clean:
-	$(foreach OBJECT,$(OBJECTS),$(subst /,\,del "$(OBJECTS)"))
-# del "$(patsubst %/%,%\%,$(OBJECTS))"
-# $(foreach OBJECT,$(OBJECTS),$(shell del "$(OBJECTS)"))
-# ifneq ("$(wildcard $(BUILD))","")
-# 		del "$(BUILD)"
-# endif
+	del $(subst /,\,$(patsubst %,"%",$(OBJECTS)))
