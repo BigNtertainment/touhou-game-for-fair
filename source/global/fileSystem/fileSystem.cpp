@@ -2,15 +2,7 @@
 
 std::string FileSystem::LoadFile(const std::string& path)
 {
-	Logger::Log("Loading file: " + path);
-
 	std::ifstream file(path);
-
-	if(!file.is_open()) {
-		Logger::Log("Failed to open file: " + path);
-		return "";
-	}
-
 	std::string result;
 
 	file.seekg(0, std::ios::end);   

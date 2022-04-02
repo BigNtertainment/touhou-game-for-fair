@@ -25,7 +25,7 @@ namespace BigNgine {
 	{
 		Game();
 		~Game();
-
+	
 		static Game* instance;
 
 		bool running = false;
@@ -37,11 +37,7 @@ namespace BigNgine {
 	public:
 		Game(const Game&) = delete;
 
-		static Game* GetInstance() {
-			if(instance == nullptr) {
-				instance = new Game();
-			}
-
+		static inline Game* GetInstance() {
 			return instance;
 		}
 		

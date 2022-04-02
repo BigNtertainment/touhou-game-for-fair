@@ -25,7 +25,6 @@ BigNgine::Texture::Texture(const char* path)
 	}
 	else
 		Logger::Error("Could not load texture at: " + std::string(path));
-
 	stbi_image_free(data);
 
 	//	unbind texture

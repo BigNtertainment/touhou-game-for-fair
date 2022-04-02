@@ -54,10 +54,10 @@ namespace BigNgine
 		friend class AnimationBehaviour;
 	
 	public:
-		std::vector<const char *> texturePaths = std::vector<const char *>();
-		std::string vertShader = FileSystem::LoadFile("./assets/shaders/vert/standard.glsl");
-		std::string fragShader = FileSystem::LoadFile("./assets/shaders/frag/textureStandard.glsl");
-		bool yFlipped = false, xFlipped = false;
+		std::vector<const char *> texturePaths;
+		std::string vertShader = FileSystem::LoadFile("assets/shaders/vert/standard.glsl");
+		std::string fragShader = FileSystem::LoadFile("assets/shaders/frag/textureStandard.glsl");
+		bool yFlipped, xFlipped;
 		
 		void Start() override;
 		
@@ -78,8 +78,6 @@ namespace BigNgine
 ///		Set texture
 ///		@param _file Path to your file of choice(should be picture)
 		void AddTexture(const char *_file);
-
-		void LoadTexture(const char *_texture);
 		
 		///Set texture
 		void SetTexture(Texture *_texture);

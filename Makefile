@@ -1,66 +1,51 @@
 CC := clang++
-C  := clang
-CLANGD := .clangd
+SRC := source
+BLD := build
+OBJ := obj
 
-CCSTD := c++20
+CFLAGS := -std=c++20 -Wall -Wextra -I./$(SRC)/external/Box2D/include \
+		  -I./$(SRC)/external/Box2D/src -I./$(SRC)/external/GLFW/include -I./$(SRC)/external/GLAD \
+		  -I./$(SRC)/external/STBI -I./$(SRC)/external/FreeType/include -I./$(SRC)
+LDFLAGS := -L./$(SRC)/external/GLFW/lib -lglfw3dll -L./$(SRC)/external/FreeType/lib -lfreetype
 
-# Recursive wildcard pattern for all files
-rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
+SOURCES := $(wildcard $(SRC)/*.cpp)
+SOURCES += $(wildcard $(SRC)/global/*/*.cpp)
+SOURCES += $(wildcard $(SRC)/types/*/*.cpp)
+SOURCES += $(wildcard $(SRC)/behaviours/*/*.cpp)
+SOURCES += $(SRC)/external/GLAD/glad.c
+SOURCES += $(SRC)/external/STBI/stb.cpp
+SOURCES += $(wildcard $(SRC)/external/Box2D/*/*/*.cpp)
+OBJECTS := $(patsubst $(SRC)/%.cpp,$(OBJ)/%.o,$(SOURCES))
 
-EXEC := touhou.exe
+output: $(OBJECTS)
+	$(CC) $^ -o $(BLD)/main.exe $(LDFLAGS)
 
-SRCDIR := source
-BLDDIR := build
-OBJDIR := obj
-EXTDIR := $(SRCDIR)/external
+release: $(OBJECTS)
+	$(CC) $(filter-out $(SRC)/main.cpp, $^) -o $(BLD)/bigngine.dll $(LDFLAGS) -shared
+	llvm-ar rc 	$(BLD)/bigngine.lib $(OBJECTS) \
+				$(SRC)/external/GLFW/lib/glfw3dll.lib \
+				$(SRC)/external/FreeType/lib/freetype.lib
+	ar ruv 	$(BLD)/bigngine.lib $(OBJECTS) \
+			$(SRC)/external/GLFW/lib/glfw3dll.lib \
+			$(SRC)/external/FreeType/lib/freetype.lib
+	ranlib $(BLD)/bigngine.a
 
-SOURCES := 	$(call rwildcard,$(SRCDIR),*.cpp) \
-			$(call rwildcard,$(SRCDIR),*.c)
+$(OBJ)/%.o: $(SRC)/%.cpp
+	@if not exist "$(subst /,\,$(dir $@))" mkdir $(subst /,\,$(dir $@))
+	$(CC) $(CFLAGS) -c $^ -o $@
 
-OBJECTS := 	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
-OBJECTS := 	$(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(OBJECTS))
-
-BUILD := $(BLDDIR)/$(EXEC)
-
-INCLUDES := -I$(EXTDIR) \
-			-I$(EXTDIR)/bigngine/ \
-			$(patsubst %,-I%,$(sort $(call rwildcard,$(EXTDIR),*/include/))) \
-			$(patsubst %,-I%,$(sort $(dir $(call rwildcard,$(EXTDIR),*.h)))) \
-			$(patsubst %,-I%../,$(sort $(dir $(call rwildcard,$(EXTDIR),*.h))))
-
-LIBS := $(call rwildcard,$(EXTDIR),*.lib)
-
-FLAGS := -Wall -Wextra
-CFLAGS := $(FLAGS)
-CCFLAGS := $(FLAGS) --std=$(CCSTD)
-
-LDFLAGS := $(foreach LIB,$(LIBS),-l$(patsubst %.lib,%,$(notdir $(LIB)))) $(foreach LIB,$(LIBS),-L$(dir $(LIB)))
-
-# Rule for linking the .obj files
-$(BUILD): $(OBJECTS)
-	$(CC) $^ $(LDFLAGS) -o $@
-
-# Rule for compiling the .cpp files into .o files
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	if not exist "$(dir $@)" mkdir "$(dir $@)"
-	$(CC) $(CCFLAGS) -c -o $@ $< $(INCLUDES)
-
-# Rule for compiling the .c files into .o files
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	if not exist "$(dir $@)" mkdir "$(dir $@)"
-	$(C) $(CFLAGS) -c -o $@ $< $(INCLUDES)
-
-# Rule for generating the .clangd file
-clangd:
-	echo CompileFlags:> $(CLANGD) \
-	&& echo     Add:>> $(CLANGD) \
-	&& echo $(foreach FLAG,$(CCFLAGS),        - $(FLAG)>> $(CLANGD) && echo) \
-	&& echo $(foreach INCLUDE,$(INCLUDES),        - $(INCLUDE)>> $(CLANGD) && echo) \
-
-# Rule for running the built executable
-run:
-	cd $(BLDDIR) && $(EXEC)
-
-# Rule for cleaning the obj and the build directory
 clean:
-	del $(subst /,\,$(patsubst %,"%",$(OBJECTS)))
+	rd /s /q "$(OBJ)/" && mkdir $(OBJ)
+	del "$(BLD)\main.exe"
+
+run:
+	cd $(BLD) && main.exe
+
+build_and_run:
+	make && make run
+
+penis:
+	@echo "8===>"
+
+all:
+	$(CC) $(SOURCES) $(CFLAGS) $(LDFLAGS) -o $(BLD)/main.exe
