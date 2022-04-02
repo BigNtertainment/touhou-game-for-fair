@@ -49,10 +49,6 @@ void BigNgine::Scene::Start()
 	AddEntity(Camera);
 	
 	_Start(this);
-	for (auto &entity: entities)
-	{
-		entity->Start();
-	}
 }
 
 void BigNgine::Scene::Update(int deltaTime)

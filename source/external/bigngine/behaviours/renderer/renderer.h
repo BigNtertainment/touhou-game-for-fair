@@ -78,6 +78,8 @@ namespace BigNgine
 ///		Set texture
 ///		@param _file Path to your file of choice(should be picture)
 		void AddTexture(const char *_file);
+
+		void LoadTexture(const char *_texture);
 		
 		///Set texture
 		void SetTexture(Texture *_texture);

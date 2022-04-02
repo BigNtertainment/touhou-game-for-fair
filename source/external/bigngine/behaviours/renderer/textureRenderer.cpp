@@ -101,7 +101,7 @@ void BigNgine::TextureRendererBehaviour::Start()
 		texture = new Texture("");
 		return;
 	}
-	texture = new Texture(texturePaths[0]);
+	LoadTexture(texturePaths[0]);
 }
 
 void BigNgine::TextureRendererBehaviour::Update(int deltaTime)
@@ -109,6 +109,8 @@ void BigNgine::TextureRendererBehaviour::Update(int deltaTime)
 	// TODO(imustend): make uniform a object, so user can add how many they want
 	//					vector of uniforms
 
+
+	glEnable(GL_TEXTURE_2D);
 
 	//	getting all uniform IDs
 	int u_resolution = glGetUniformLocation(program, "u_resolution");
@@ -144,6 +146,8 @@ void BigNgine::TextureRendererBehaviour::Update(int deltaTime)
 	// this technically can stay, but it should be called for used texture
 	// however it won`t really make any difference
 	texture->Unbind();
+
+	glUseProgram(0);
 }
 
 void BigNgine::TextureRendererBehaviour::Destroy()
@@ -168,6 +172,11 @@ void BigNgine::TextureRendererBehaviour::Destroy()
 [[maybe_unused]] void BigNgine::TextureRendererBehaviour::SetTexture(Texture *_texture)
 {
 	texture = _texture;
+}
+
+[[maybe_unused]] void BigNgine::TextureRendererBehaviour::LoadTexture(const char *_texture)
+{
+	texture = new Texture(_texture);
 }
 
 void BigNgine::TextureRendererBehaviour::AddTexture(const char *_file)

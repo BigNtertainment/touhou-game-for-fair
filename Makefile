@@ -30,7 +30,7 @@ INCLUDES := -I$(EXTDIR) \
 
 LIBS := $(call rwildcard,$(EXTDIR),*.lib)
 
-FLAGS := -Wall
+FLAGS := -Wall -Wextra
 CFLAGS := $(FLAGS)
 CCFLAGS := $(FLAGS) --std=$(CCSTD)
 
