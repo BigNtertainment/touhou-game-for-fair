@@ -10,6 +10,7 @@
 #include "../vector2/vector2.h"
 #include "../../global/game/game.h"
 #include "../../global/input/input.h"
+#include "types/prefab/prefab.h"
 
 namespace BigNgine {
 	class Scene;
@@ -25,6 +26,7 @@ namespace Input {
 
 namespace BigNgine {
 	class Entity;
+	class Prefab;
 	class Behaviour;
 	
 	class Scene {
@@ -42,6 +44,11 @@ namespace BigNgine {
 ///		Adds entity to Scene
 ///		@param entity BigNgine::Entity entity to be added to scene
 		void AddEntity(Entity* entity);
+
+		/// Creates entity from prefab and adds it to scene
+		/// @param prefab the prefab to be added to the scene
+		/// @param args arguments to be passed to prefab
+		void AddPrefab(Prefab& prefab, void* args[] = {}, std::function<void(Entity* creation)> callback = [] (Entity* creation) {});
 
 ///		Adds callback to Scene
 ///		@param callback Input::Callback callback to be added to scene

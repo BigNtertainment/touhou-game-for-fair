@@ -51,7 +51,7 @@ void BigNgine::Game::Start(BigNgine::Scene* firstScene, game_startfunc Start, ga
 	}
 	
 	// Tell OpenGL to only draw onto a pixel if the shape is closer to the viewer than anything already drawn at that pixel
-	glEnable(GL_DEPTH_TEST); /* enable depth-testing */
+	// glEnable(GL_DEPTH_TEST); /* enable depth-testing */
 	
 	// So we can use alpha values in fragment shaders
 	glEnable(GL_BLEND);
@@ -61,7 +61,7 @@ void BigNgine::Game::Start(BigNgine::Scene* firstScene, game_startfunc Start, ga
 	// with LESS depth-testing interprets a smaller depth value as meaning "closer"
 //	TODO(imustend): make it GL_GREATER
 //	 and write disclaimer
-	glDepthFunc(GL_LESS);
+	glDepthFunc(GL_NEVER);
 
 	glViewport(0, 0, width, height);
 

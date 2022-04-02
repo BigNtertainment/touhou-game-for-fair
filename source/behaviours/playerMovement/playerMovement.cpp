@@ -17,8 +17,8 @@ Touhou::PlayerMovement::PlayerMovement(BigNgine::Entity* boundBox)
 
 void Touhou::PlayerMovement::Update(int deltaTime) {
 	BigNgine::Vector2 movementVector = BigNgine::Vector2(
-		Input::Get(BIGNGINE_KEY_D) - Input::Get(BIGNGINE_KEY_A),
-		Input::Get(BIGNGINE_KEY_S) - Input::Get(BIGNGINE_KEY_W)
+		Input::Get(BIGNGINE_KEY_RIGHT) - Input::Get(BIGNGINE_KEY_LEFT),
+		Input::Get(BIGNGINE_KEY_DOWN) - Input::Get(BIGNGINE_KEY_UP)
 	);
 
 	bool precisionMode = Input::Get(BIGNGINE_KEY_LEFT_SHIFT);

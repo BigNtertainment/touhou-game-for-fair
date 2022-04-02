@@ -2,6 +2,7 @@
 #include <windows.h>
 
 #include "behaviours/playerMovement/playerMovement.h"
+#include "behaviours/shooting/shooting.h"
 
 void Start()
 {
@@ -16,7 +17,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	BigNgine::Game *game = BigNgine::Game::GetInstance();
 
 	BigNgine::Scene* scene = new BigNgine::Scene(
-		[game](BigNgine::Scene* scene) {
+		[game](BigNgine::Scene* scene) -> void {
 			// GAME AREA
 			const float gameAreaVerticalMargin = 20.f;
 			const float gameAreaHorizontalMargin = 20.f;
@@ -47,16 +48,17 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			player->SetDepth(0.f);
 
-			auto* renderer = new BigNgine::TextureRendererBehaviour();
+			auto* playerRenderer = new BigNgine::TextureRendererBehaviour();
 
-			renderer->AddTexture("./assets/img/mariss.png");
+			playerRenderer->AddTexture("./assets/img/mariss.png");
 
-			player->AddBehaviour(renderer);
+			player->AddBehaviour(playerRenderer);
 			player->AddBehaviour(new Touhou::PlayerMovement(gameArea));
+			player->AddBehaviour(new Touhou::ShootingBehaviour());
 
 			scene->AddEntity(player);
 		},
-		[](BigNgine::Scene* scene, int deltaTime) {
+		[](BigNgine::Scene* scene, int deltaTime) -> void {
 
 		}
 	);
@@ -70,7 +72,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	
 	Logger::Success("Starting game.");
 	
-	game->Start(scene, Start, Update);
+	game->Start(scene, []() -> void {}, [](int) -> void {});
 	
 	return 0;
 }
