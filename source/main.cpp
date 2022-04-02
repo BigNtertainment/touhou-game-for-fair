@@ -63,8 +63,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	
 	game->ResizeWindow(1200, 800);
 	
-	game->SetName("BigNgine");
+	game->SetName("Touhou - The Kerfuffle of The Lackadaisical Ragamuffin");
 	
+	// TODO: Add a custom icon
 	game->SetIcon("assets/icon/icon.png");
 	
 	Logger::Success("Starting game.");
