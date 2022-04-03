@@ -2,6 +2,7 @@
 
 #include "behaviours/bullet/bullet.h"
 #include "behaviours/renderer/renderer.h"
+#include "behaviours/bulletDestruction/bulletDestruction.h"
 
 const BigNgine::Vector2 Touhou::PlayerBullet::bulletSize = BigNgine::Vector2(50.f, 50.f);
 
@@ -22,6 +23,8 @@ BigNgine::Entity* Touhou::PlayerBullet::Create(void** args) {
 	renderer->AddTexture("./assets/img/mariss.png");
 
 	bullet->AddBehaviour(renderer);
+
+	bullet->AddBehaviour(new BulletDestructionBehaviour((BigNgine::Entity*)args[2]));
 
 	return bullet;
 }

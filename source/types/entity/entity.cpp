@@ -23,15 +23,25 @@ void BigNgine::Entity::Start() {
 }
 
 void BigNgine::Entity::Update(int deltaTime) {
+	if(!active)
+		return;
+
 	for(auto & behaviour : behaviours) {
 		if(behaviour->active) {
 			behaviour->Update(deltaTime);
+
+			if(this == nullptr)
+				break;
 		}
 	}
 }
 
 BigNgine::Scene* BigNgine::Entity::GetParentScene() {
 	return parentScene;
+}
+
+void BigNgine::Entity::SetActive(bool _active) {
+	active = _active;
 }
 
 BigNgine::Entity::~Entity() {

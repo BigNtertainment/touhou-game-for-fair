@@ -3,6 +3,7 @@
 
 #include "behaviours/playerMovement/playerMovement.h"
 #include "behaviours/circleCollider/circleCollider.h"
+#include "behaviours/shooting/shooting.h"
 
 void Start()
 {
@@ -77,15 +78,12 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			player->AddBehaviour(new BigNgine::FollowBehaviour(playerCollider, player->size/-2.));
 			player->AddBehaviour(playerRenderer);
+			player->AddBehaviour(new Touhou::ShootingBehaviour(gameArea));
 
 			auto* playerColliderBehaviour = new Touhou::CircleColliderBehaviour();
-			auto* colliderren = new BigNgine::TextureRendererBehaviour();
 
 			playerCollider->AddBehaviour(new Touhou::PlayerMovement(gameArea));
 			playerCollider->AddBehaviour(playerColliderBehaviour);
-			
-			colliderren->AddTexture("./assets/icon/icon.png");
-			playerCollider->AddBehaviour(colliderren);
 
 			scene->AddEntity(playerCollider);
 			scene->AddEntity(player);
@@ -106,7 +104,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			playerColliderBehaviour->SetCallback([debuggerRenderer](Touhou::CircleColliderBehaviour* collider) {
 				debuggerRenderer->SetText("yes");
 			});
-
 		},
 		[](BigNgine::Scene* scene, int deltaTime) -> void {
 
