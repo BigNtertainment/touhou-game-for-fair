@@ -44,6 +44,26 @@ std::vector<Input::Callback *> BigNgine::Scene::GetCallbacks()
 	return callbacks;
 }
 
+void BigNgine::Scene::RemoveEntity(Entity* entity) {
+	if(entity == nullptr) {
+		Logger::Error("Removed entity is nullptr");
+		return;
+	}
+
+	// Remove the entity from the scene entities vector
+	entities.erase(std::remove(entities.begin(), entities.end(), entity), entities.end());
+
+	Logger::Log(1);
+
+	// If this scene is currently running, call the entity start method
+	delete entity;
+
+	Logger::Log(2);
+
+	// Set the entity to nullptr to avoid double deletion
+	entity = nullptr;
+}
+
 int BigNgine::Scene::GetActiveTime()
 {
 	return activeTime;
@@ -60,7 +80,7 @@ void BigNgine::Scene::Start()
 	AddEntity(Camera);
 	
 	_Start(this);
-	for (auto &entity: entities)
+	for (auto* entity: entities)
 	{
 		entity->Start();
 	}
@@ -75,31 +95,58 @@ void BigNgine::Scene::Update(int deltaTime)
 	activeTime += deltaTime;
 	
 	_Update(this, deltaTime);
-	for (auto &entity: entities)
+
+	Logger::Log(1);
+
+	size_t size = entities.size();
+
+	for (int i = 0; i < size; i++)
 	{
-		entity->Update(deltaTime);
+		if(entities[i] == nullptr) {
+			Logger::Error("Entity is nullptr");
+			continue;
+		}
+
+		if(reinterpret_cast<Entity*>(entities[i])->active)
+			entities[i]->Update(deltaTime);
+
+		// Update size in case the Update function changed it
+		size = entities.size();
 	}
+
+	Logger::Log(2);
 }
 
 BigNgine::Scene::~Scene()
 {
-	for (auto &entity : entities)
+	for (auto* entity : entities)
 	{
 		delete entity;
+
+		entity = nullptr;
 	}
 
-	for (auto &callback : callbacks)
+	for (auto* callback : callbacks)
 	{
 		delete callback;
+
+		callback = nullptr;
 	}
 
 	delete world;
+	world = nullptr;
 	delete gravity;
-	
+	gravity = nullptr;
+
 	Scene::scenes.erase(std::remove(Scene::scenes.begin(), Scene::scenes.end(), this), Scene::scenes.end());
 }
 
 std::vector<BigNgine::Scene *> BigNgine::Scene::GetScenes()
 {
 	return BigNgine::Scene::scenes;
+}
+
+std::vector<BigNgine::Entity*> BigNgine::Scene::GetEntities()
+{
+	return entities;
 }

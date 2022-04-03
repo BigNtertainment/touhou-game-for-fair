@@ -30,7 +30,7 @@ void Touhou::CircleColliderBehaviour::Update(int deltaTime)
 
 void Touhou::CircleColliderBehaviour::Destroy()
 {
-	std::remove(colliders.begin(), colliders.end(), this);
+	colliders.erase(std::remove(colliders.begin(), colliders.end(), this), colliders.end());
 }
 
 bool Touhou::CircleColliderBehaviour::IsColliding(Touhou::CircleColliderBehaviour* collider) const

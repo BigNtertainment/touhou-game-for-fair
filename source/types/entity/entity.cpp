@@ -44,8 +44,17 @@ void BigNgine::Entity::SetActive(bool _active) {
 	active = _active;
 }
 
+bool BigNgine::Entity::IsActive() {
+	return active;
+}
+
 BigNgine::Entity::~Entity() {
-	for(auto & behaviour : behaviours) {
-		delete behaviour;
+	Logger::Log("Entity destroyed " + tag);
+
+	// We do it like that because the behaviour gets deleted from the vector automatically, making the next element index zero
+	for(int i = 0; i < behaviours.size(); i++) {
+		Logger::Log("Deleting behaviour " + behaviours[0]->name);
+
+		delete behaviours[0];
 	}
 }
