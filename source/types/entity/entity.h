@@ -17,6 +17,9 @@ namespace BigNgine {
 	class Entity {
 		friend Behaviour;
 		friend Scene;
+
+		bool active = true;
+
 	public:
 		explicit Entity(const BigNgine::Vector2& _position = DEFAULT_POSITION, float _rotation = DEFAULT_ROTATION, const BigNgine::Vector2& _size = DEFAULT_SIZE);
 
@@ -71,8 +74,10 @@ namespace BigNgine {
 
 		void Start();
 		void Update(int deltaTime);
-		
+
 		Scene* GetParentScene();
+
+		void SetActive(bool _active);
 
 		~Entity();
 

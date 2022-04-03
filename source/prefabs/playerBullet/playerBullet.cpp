@@ -2,10 +2,11 @@
 
 #include "behaviours/bullet/bullet.h"
 #include "behaviours/renderer/renderer.h"
+#include "behaviours/bulletDestruction/bulletDestruction.h"
 
 const BigNgine::Vector2 Touhou::PlayerBullet::bulletSize = BigNgine::Vector2(50.f, 50.f);
 
-// TODO: Destroy bullets when they leave the game area
+// FIXME: it crashes the game when you spam the bullets for some time
 BigNgine::Entity* Touhou::PlayerBullet::Create(void** args) {
 	auto* bullet = new BigNgine::Entity(
 		*(BigNgine::Vector2*)args[0],
@@ -22,6 +23,8 @@ BigNgine::Entity* Touhou::PlayerBullet::Create(void** args) {
 	renderer->AddTexture("./assets/img/mariss.png");
 
 	bullet->AddBehaviour(renderer);
+
+	bullet->AddBehaviour(new BulletDestructionBehaviour((BigNgine::Entity*)args[2]));
 
 	return bullet;
 }

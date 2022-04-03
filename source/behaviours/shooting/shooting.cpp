@@ -1,5 +1,10 @@
 #include "shooting.h"
 
+Touhou::ShootingBehaviour::ShootingBehaviour(BigNgine::Entity* boundBox) :
+	boundBox(boundBox) {}
+
+int instanceCount = 0;
+
 void Touhou::ShootingBehaviour::Update(int deltaTime) {
 	if(cooldownTimer > 0.f)
 	cooldownTimer -= deltaTime / 1000.f;
@@ -12,8 +17,12 @@ void Touhou::ShootingBehaviour::Update(int deltaTime) {
 
 		void* args[] = {
 			(void*)&bulletPosition,
-			(void*)&bulletDirection
+			(void*)&bulletDirection,
+			(void*)boundBox
 		};
+
+		Logger::Log(instanceCount);
+		instanceCount++;
 
 		parent->GetParentScene()->AddPrefab(bulletPrefab, args);
 
