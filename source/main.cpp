@@ -14,9 +14,10 @@ void Update([[maybe_unused]] int deltaTime)
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 {
+
 	BigNgine::Game *game = BigNgine::Game::GetInstance();
 
-	BigNgine::Scene* scene = new BigNgine::Scene(
+	BigNgine::Scene* gameScene = new BigNgine::Scene(
 		[game](BigNgine::Scene* scene) -> void {
 			// GAME AREA
 			const float gameAreaVerticalMargin = 20.f;
@@ -68,7 +69,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				0.f,
 				BigNgine::Vector2(40.f, 40.f)
 			);
-			playerCollider->SetDepth(0.f);
 			player->SetDepth(0.f);
 
 			auto* playerRenderer = new BigNgine::TextureRendererBehaviour();
@@ -79,13 +79,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			player->AddBehaviour(playerRenderer);
 
 			auto* playerColliderBehaviour = new Touhou::CircleColliderBehaviour();
-			auto* colliderren = new BigNgine::TextureRendererBehaviour();
 
 			playerCollider->AddBehaviour(new Touhou::PlayerMovement(gameArea));
 			playerCollider->AddBehaviour(playerColliderBehaviour);
 			
-			colliderren->AddTexture("./assets/icon/icon.png");
-			playerCollider->AddBehaviour(colliderren);
 
 			scene->AddEntity(playerCollider);
 			scene->AddEntity(player);
@@ -113,6 +110,40 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 		}
 	);
 	
+
+
+	BigNgine::Scene* TitleScreen = new BigNgine::Scene(
+		[game](BigNgine::Scene* scene) -> void {
+			auto* title = new BigNgine::Entity(
+				BigNgine::Vector2(-600.f, -400.f),
+				0.f,
+				BigNgine::Vector2(1200.f,800.f)
+			);
+			title->SetDepth(0.0f);
+			auto* renderer = new BigNgine::TextureRendererBehaviour();
+			renderer->SetFragShader(FileSystem::LoadFile("assets/shaders/frag/logo.glsl"));
+			renderer->SetVertShader(FileSystem::LoadFile("assets/shaders/vert/logo.glsl"));
+			renderer->AddTexture("./assets/img/logo.png");
+			title->AddBehaviour(renderer);
+
+			scene->AddEntity(title);
+	
+		},
+		[game, gameScene](BigNgine::Scene* scene, int deltaTime) -> void {
+			if(scene->GetActiveTime() >= 3500)
+				game->SetActiveScene(gameScene);
+		}
+	);
+	auto* load = new BigNgine::Scene(
+		[](BigNgine::Scene* scene) -> void {
+
+		},
+		[game, TitleScreen](BigNgine::Scene* scene, int deltaTime) -> void {
+			if(scene->GetActiveTime() >= 1000)
+				game->SetActiveScene(TitleScreen);
+		}
+	);
+	
 	game->ResizeWindow(1200, 800);
 	
 	game->SetName("Touhou - The Kerfuffle of The Lackadaisical Ragamuffin");
@@ -122,7 +153,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	
 	Logger::Success("Starting game.");
 	// TODO: add loading screen 
-	game->Start(scene, Start, Update);
+	game->Start(load, Start, Update);
 	
 	return 0;
 }	
