@@ -6,7 +6,7 @@
 
 const BigNgine::Vector2 Touhou::PlayerBullet::bulletSize = BigNgine::Vector2(50.f, 50.f);
 
-// TODO: Destroy bullets when they leave the game area
+// FIXME: it crashes the game when you spam the bullets for some time
 BigNgine::Entity* Touhou::PlayerBullet::Create(void** args) {
 	auto* bullet = new BigNgine::Entity(
 		*(BigNgine::Vector2*)args[0],
