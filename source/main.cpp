@@ -15,8 +15,6 @@ void Update([[maybe_unused]] int deltaTime)
 {
 }
 
-// FIXME: Game crashes on exit
-
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 {
 	auto *game = BigNgine::Game::GetInstance();

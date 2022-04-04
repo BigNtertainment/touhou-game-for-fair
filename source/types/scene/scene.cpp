@@ -130,9 +130,7 @@ BigNgine::Scene::~Scene()
 		callback = nullptr;
 	}
 
-	delete world;
 	world = nullptr;
-	delete gravity;
 	gravity = nullptr;
 
 	Scene::scenes.erase(std::remove(Scene::scenes.begin(), Scene::scenes.end(), this), Scene::scenes.end());
