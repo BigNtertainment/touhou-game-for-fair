@@ -16,9 +16,9 @@ void Update([[maybe_unused]] int deltaTime)
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 {
-	BigNgine::Game *game = BigNgine::Game::GetInstance();
+	auto *game = BigNgine::Game::GetInstance();
 
-	BigNgine::Scene* gameScene = new BigNgine::Scene(
+	auto* gameScene = new BigNgine::Scene(
 		[game](BigNgine::Scene* scene) -> void {
 			// GAME AREA
 			const float gameAreaVerticalMargin = 20.f;
@@ -43,7 +43,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			scene->AddEntity(gameArea);
 
 			// BULLET
-			BigNgine::Entity* bullet = new BigNgine::Entity(
+			auto* bullet = new BigNgine::Entity(
 				BigNgine::Vector2(-200.f, -300.f),
 				180.f,
 				BigNgine::Vector2(20.f, 20.f)
@@ -114,8 +114,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	);
 	
 	int option = 0;
+	BigNgine::TextRendererBehaviour* menuRenderer;
 	auto* MainMenu = new BigNgine::Scene(
-		[&option](BigNgine::Scene* scene) -> void {
+		[&option, &menuRenderer, gameScene, game](BigNgine::Scene* scene) -> void {
+			// TITLE
 			auto* title = new BigNgine::Entity(
 				BigNgine::Vector2(0.f, 0.f),
 				0.f,
@@ -128,27 +130,51 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			titleRenderer->SetMarginBottom(12);
 			titleRenderer->SetText("Touhou\nThe Kerfuffle\nof\nThe Lackadaisical\nKerfuffle");
 			scene->AddEntity(title);
-			scene->AddCallback(new Input::Callback([&option](int key, int, int) -> void {
+
+			// MENU
+			auto* menu = new BigNgine::Entity(
+				BigNgine::Vector2(100.f, 290.f),
+				0.f,
+				BigNgine::Vector2(0.f, 0.f)
+			);
+
+			menuRenderer = new BigNgine::TextRendererBehaviour();
+			menu->AddBehaviour(menuRenderer);
+			menuRenderer->SetFontSize(24);
+			menuRenderer->SetMarginBottom(72);
+			menuRenderer->SetText(" Start\n Exit");
+			scene->AddEntity(menu);
+
+
+			scene->AddCallback(new Input::Callback([&option, gameScene, game](int key, int, int) -> void {
 				switch (key) {
 					case BIGNGINE_KEY_UP:
-						 option = abs((option + 1)%2);
-						 Logger::Log(option);
-						 break;
+						option = abs((option - 1)%2);
+						break;
 					case BIGNGINE_KEY_DOWN:
-						 option = abs((option - 1)%2);
-						 Logger::Log(option);
-						 break;
+						option = abs((option + 1)%2);
+						break;
+					case BIGNGINE_KEY_Z:
+						if(option == 0)
+							game->SetActiveScene(gameScene);
+						else if (option == 1)
+							game->Stop();
+						break;
 					default:
 						return;
 				}
 			}));
 		},
-		[game, gameScene, option](BigNgine::Scene* scene, int deltaTime) -> void {
-			
+		[game, gameScene, &option, &menuRenderer](BigNgine::Scene* scene, int deltaTime) -> void {
+			if(option == 0)
+				menuRenderer->SetText(">Start\n Exit");
+			else if(option == 1)
+				menuRenderer->SetText(" Start\n>Exit");
+
 		}
 	);
  
-	BigNgine::Scene* TitleScreen = new BigNgine::Scene(
+	auto* TitleScreen = new BigNgine::Scene(
 		[game](BigNgine::Scene* scene) -> void {
 			auto* title = new BigNgine::Entity(
 				BigNgine::Vector2(-600.f, -400.f),
@@ -190,7 +216,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	game->SetIcon("assets/icon/icon.png");
 	
 	Logger::Success("Starting game.");
-	// TODO: add loading screen 
+	
 	game->Start(load, Start, Update);
 	
 	return 0;
