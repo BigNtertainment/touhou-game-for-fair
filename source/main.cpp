@@ -128,7 +128,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			title->AddBehaviour(titleRenderer);
 			titleRenderer->SetFontSize(24);
 			titleRenderer->SetMarginBottom(12);
-			titleRenderer->SetText("Touhou\nThe Kerfuffle\nof\nThe Lackadaisical\nKerfuffle");
+			titleRenderer->SetText("Touhou\nThe Kerfuffle\nof\nThe Lackadaisical\nRagamuffin");
 			scene->AddEntity(title);
 
 			// MENU
@@ -164,6 +164,19 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 						return;
 				}
 			}));
+
+
+			auto* chimata = new BigNgine::Entity(
+				BigNgine::Vector2(100.f, -130.f),
+				0.f,
+				BigNgine::Vector2(305.f, 447.f)
+			);
+			chimata->SetDepth(0.0f);
+			auto* chimataRenderer = new BigNgine::TextureRendererBehaviour();
+			chimata->AddBehaviour(chimataRenderer);
+			chimataRenderer->AddTexture("./assets/img/chimata_main_menu.png");
+			scene->AddEntity(chimata);
+
 		},
 		[game, gameScene, &option, &menuRenderer](BigNgine::Scene* scene, int deltaTime) -> void {
 			if(option == 0)
