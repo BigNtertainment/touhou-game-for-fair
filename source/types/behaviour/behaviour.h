@@ -33,6 +33,8 @@ namespace BigNgine {
 		 */
 		void SetActive(bool _active);
 
+		inline Entity* GetParent() { return parent; };
+
 		Behaviour();
 		~Behaviour();
 	protected:
