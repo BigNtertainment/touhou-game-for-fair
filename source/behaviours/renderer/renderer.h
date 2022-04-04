@@ -85,6 +85,7 @@ namespace BigNgine
 	private:
 		unsigned int VBO, VAO, EBO, program;
 		Texture *texture;
+		unsigned int time = 0;
 	};
 
 

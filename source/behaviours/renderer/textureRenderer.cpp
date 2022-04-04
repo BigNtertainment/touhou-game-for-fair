@@ -131,7 +131,7 @@ void BigNgine::TextureRendererBehaviour::Update(int deltaTime)
 	glUniform2f(u_size, parent->size.x, parent->size.y);
 	glUniform1f(u_depth, parent->depth);
 	glUniform1f(u_rotation, parent->rotation);
-	glUniform1i(u_time, (int)parent->GetParentScene()->GetActiveTime());
+	glUniform1i(u_time, (int)time);
 	glUniform2f(u_camera_position, parent->GetParentScene()->Camera->position.x, parent->GetParentScene()->Camera->position.y);
 	glUniform1f(u_camera_zoom, parent->GetParentScene()->CameraZoom);
 	glUniform2f(u_texture_flip, (float)xFlipped, (float)yFlipped);
@@ -145,6 +145,9 @@ void BigNgine::TextureRendererBehaviour::Update(int deltaTime)
 	// this technically can stay, but it should be called for used texture
 	// however it won`t really make any difference
 	texture->Unbind();
+
+	// doing this so on first frame time is always 0
+	time += deltaTime;
 	
 }
 
