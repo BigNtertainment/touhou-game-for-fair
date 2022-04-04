@@ -53,12 +53,8 @@ void BigNgine::Scene::RemoveEntity(Entity* entity) {
 	// Remove the entity from the scene entities vector
 	entities.erase(std::remove(entities.begin(), entities.end(), entity), entities.end());
 
-	Logger::Log(1);
-
 	// If this scene is currently running, call the entity start method
 	delete entity;
-
-	Logger::Log(2);
 
 	// Set the entity to nullptr to avoid double deletion
 	entity = nullptr;
@@ -96,8 +92,6 @@ void BigNgine::Scene::Update(int deltaTime)
 	
 	_Update(this, deltaTime);
 
-	Logger::Log(1);
-
 	size_t size = entities.size();
 
 	for (int i = 0; i < size; i++)
@@ -107,14 +101,17 @@ void BigNgine::Scene::Update(int deltaTime)
 			continue;
 		}
 
-		if(reinterpret_cast<Entity*>(entities[i])->active)
-			entities[i]->Update(deltaTime);
+		BigNgine::Entity* entity = entities[i];
+
+		entity->Update(deltaTime);
+
+		if(entity == nullptr) {
+			i--;
+		}
 
 		// Update size in case the Update function changed it
 		size = entities.size();
 	}
-
-	Logger::Log(2);
 }
 
 BigNgine::Scene::~Scene()

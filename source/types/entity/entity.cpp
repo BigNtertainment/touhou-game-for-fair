@@ -26,13 +26,22 @@ void BigNgine::Entity::Update(int deltaTime) {
 	if(!active)
 		return;
 
-	for(auto & behaviour : behaviours) {
-		if(behaviour->active) {
-			behaviour->Update(deltaTime);
+	uint32_t size = behaviours.size();
+
+	for(int i = 0; i < size; i++) {
+		if(behaviours[i]->active) {
+			if(behaviours[i] == nullptr) {
+				Logger::Error("Behaviour is nullptr");
+				continue;
+			}
+
+			behaviours[i]->Update(deltaTime);
 
 			if(this == nullptr)
 				break;
 		}
+
+		size = behaviours.size();
 	}
 }
 
@@ -49,12 +58,12 @@ bool BigNgine::Entity::IsActive() {
 }
 
 BigNgine::Entity::~Entity() {
-	Logger::Log("Entity destroyed " + tag);
-
 	// We do it like that because the behaviour gets deleted from the vector automatically, making the next element index zero
 	for(int i = 0; i < behaviours.size(); i++) {
-		Logger::Log("Deleting behaviour " + behaviours[0]->name);
-
 		delete behaviours[0];
 	}
+}
+
+void BigNgine::Entity::operator delete(void* ptr) {
+	free(ptr);
 }

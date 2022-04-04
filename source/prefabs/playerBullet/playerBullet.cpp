@@ -58,8 +58,6 @@ BigNgine::Entity* Touhou::PlayerBullet::Create(void** args) {
 		BigNgine::Scene* scene = parent->GetParentScene();
 
 		scene->RemoveEntity(collider->GetParent());
-
-		Logger::Log("destroyed bullet on collision");
 	});
 
 	bullet->AddBehaviour(collider);

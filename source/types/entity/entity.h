@@ -87,6 +87,8 @@ namespace BigNgine {
 
 		~Entity();
 
+		void operator delete(void* ptr);
+
 	private:
 		Scene* parentScene;
 		std::vector<Behaviour*> behaviours;

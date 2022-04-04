@@ -72,18 +72,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			scene->AddEntity(dummy);
 		},
 		[](BigNgine::Scene* scene, int deltaTime) -> void {
-			// Delete the bullets that are out of the game area
-			std::vector<BigNgine::Entity*> entities = scene->GetEntities();
-
-			for (int i = 0; i < entities.size(); i++) {
-				if(!entities[i]->IsActive()) {
-					Logger::Log("destroying bullet on screen ezxt");
-
-					scene->RemoveEntity(entities[i]);
-
-					Logger::Log("destroyed bullet on screen exit");
-				}
-			}
+			
 		}
 	);
 	

@@ -3,11 +3,7 @@
 BigNgine::Behaviour::Behaviour() = default;
 
 BigNgine::Behaviour::~Behaviour() {
-	Logger::Log("destroying behaviour " + name);
-
 	Destroy();
-
-	Logger::Log("behaviour destroyed " + name);
 
 	parent->behaviours.erase(std::remove(parent->behaviours.begin(), parent->behaviours.end(), this), parent->behaviours.end());
 }
