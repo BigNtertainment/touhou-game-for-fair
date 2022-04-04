@@ -33,7 +33,12 @@ namespace BigNgine {
 		 */
 		void SetActive(bool _active);
 
-		inline Entity* GetParent() { return parent; };
+		/**
+		 * @brief Get the entity to which this behaviour is attached.
+		 * 
+		 * @return Entity* The entity to which this behaviour is attached.
+		 */
+		Entity* GetParent();
 
 		Behaviour();
 		~Behaviour();

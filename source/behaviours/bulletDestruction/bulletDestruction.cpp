@@ -10,6 +10,6 @@ void Touhou::BulletDestructionBehaviour::Update(int) {
 		parent->position.y + parent->size.y < boundBox->position.y ||
 		parent->position.y - parent->size.y > boundBox->position.y + boundBox->size.y
 	) {
-		parent->SetActive(false);
+		parent->GetParentScene()->RemoveEntity(parent);
 	}
 }

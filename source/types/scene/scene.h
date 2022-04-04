@@ -41,18 +41,22 @@ namespace BigNgine {
 
 		Scene(SceneStartFunction Start, SceneUpdateFunction Update);
 
-///		Adds entity to Scene
-///		@param entity BigNgine::Entity entity to be added to scene
+		///	Adds entity to Scene
+		///	@param entity BigNgine::Entity entity to be added to scene
 		void AddEntity(Entity* entity);
 
 		/// Creates entity from prefab and adds it to scene
 		/// @param prefab the prefab to be added to the scene
 		/// @param args arguments to be passed to prefab
-		void AddPrefab(Prefab& prefab, void* args[] = {}, std::function<void(Entity* creation)> callback = [] (Entity* creation) {});
+		void AddPrefab(Prefab& prefab, void* args[] = {}, std::function<void(Entity* creation)> callback = [] (Entity*) {});
 
-///		Adds callback to Scene
-///		@param callback Input::Callback callback to be added to scene
+		///	Adds callback to Scene
+		///	@param callback Input::Callback callback to be added to scene
 		void AddCallback(Input::Callback* callback);
+
+		/// Removes the entity from the scene and deletes it
+		/// @param entity the entity to be removed from the scene
+		void RemoveEntity(Entity* entity);
 
 		int GetActiveTime();
 
@@ -63,6 +67,7 @@ namespace BigNgine {
 
 		static std::vector<Scene*> GetScenes();
 		std::vector<Input::Callback*> GetCallbacks();
+		std::vector<Entity*> GetEntities();
 	private:
 		std::vector<Entity*> entities;
 		std::vector<Input::Callback*> callbacks;

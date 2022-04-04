@@ -3,10 +3,12 @@
 #include "behaviours/bullet/bullet.h"
 #include "behaviours/renderer/renderer.h"
 #include "behaviours/bulletDestruction/bulletDestruction.h"
+#include "behaviours/circleCollider/circleCollider.h"
+#include "behaviours/enemy/enemy.h"
 
-const BigNgine::Vector2 Touhou::PlayerBullet::bulletSize = BigNgine::Vector2(50.f, 50.f);
+const BigNgine::Vector2 Touhou::PlayerBullet::bulletSize = BigNgine::Vector2(20.f, 20.f);
 
-// FIXME: it crashes the game when you spam the bullets for some time
+//TODO: Make the bullet not visible outside of the game area (probably by drawing something over it)
 BigNgine::Entity* Touhou::PlayerBullet::Create(void** args) {
 	auto* bullet = new BigNgine::Entity(
 		*(BigNgine::Vector2*)args[0],
@@ -16,15 +18,49 @@ BigNgine::Entity* Touhou::PlayerBullet::Create(void** args) {
 
 	bullet->SetDepth(0.f);
 
+	bullet->tag = "PlayerBullet";
+
 	bullet->AddBehaviour(new BulletBehaviour(*(BigNgine::Vector2*)args[1]));
 
 	BigNgine::TextureRendererBehaviour* renderer = new BigNgine::TextureRendererBehaviour();
 
-	renderer->AddTexture("./assets/img/mariss.png");
+	renderer->name = "playerBullet_renderer";
+
+	renderer->AddTexture("./assets/img/bullet1.png");
 
 	bullet->AddBehaviour(renderer);
 
-	bullet->AddBehaviour(new BulletDestructionBehaviour((BigNgine::Entity*)args[2]));
+	auto* bulletDestruction = new BulletDestructionBehaviour((BigNgine::Entity*)args[2]);
+
+	bulletDestruction->name = "playerBullet_destruction";
+
+	bullet->AddBehaviour(bulletDestruction);
+
+	auto* collider = new CircleColliderBehaviour();
+
+	collider->name = "playerBullet_collider";
+
+	collider->SetCallback([collider](CircleColliderBehaviour* other) {
+		if(other->GetParent()->tag != "Enemy")
+			return;
+
+		Touhou::EnemyBehaviour* enemy = other->GetParent()->GetBehaviour<Touhou::EnemyBehaviour>();
+
+		if(enemy == nullptr) {
+			Logger::Error("EnemyBehaviour not found on an entity tagged as \"Enemy\".");
+			return;
+		}
+
+		enemy->Damage();
+
+		BigNgine::Entity* parent = collider->GetParent();
+
+		BigNgine::Scene* scene = parent->GetParentScene();
+
+		scene->RemoveEntity(collider->GetParent());
+	});
+
+	bullet->AddBehaviour(collider);
 
 	return bullet;
 }

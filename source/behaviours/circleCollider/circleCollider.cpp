@@ -10,8 +10,13 @@ void Touhou::CircleColliderBehaviour::Start()
 void Touhou::CircleColliderBehaviour::Update(int deltaTime)
 {
 	bool encounteredThis = false;
-	for(auto* collider : colliders)
+
+	uint32_t size = colliders.size();
+
+	for(uint32_t i = 0; i < size; i++)
 	{
+		CircleColliderBehaviour* collider = colliders[i];
+
 		if(collider == this)
 		{
 			encounteredThis = true;
@@ -25,12 +30,22 @@ void Touhou::CircleColliderBehaviour::Update(int deltaTime)
 			collider->callback(this);
 			this->callback(collider);
 		}
+
+		if(this == nullptr)
+			break;
+
+		if(collider == nullptr)
+		{
+			i--;
+		}
+
+		size = colliders.size();
 	}
 }
 
 void Touhou::CircleColliderBehaviour::Destroy()
 {
-	std::remove(colliders.begin(), colliders.end(), this);
+	colliders.erase(std::remove(colliders.begin(), colliders.end(), this), colliders.end());
 }
 
 bool Touhou::CircleColliderBehaviour::IsColliding(Touhou::CircleColliderBehaviour* collider) const

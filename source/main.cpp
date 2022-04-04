@@ -1,8 +1,9 @@
 #include "BigNgine.h"
 #include <windows.h>
 
-#include "behaviours/playerMovement/playerMovement.h"
+#include "behaviours/enemy/enemy.h"
 #include "behaviours/circleCollider/circleCollider.h"
+#include "other/createPlayer/createPlayer.h"
 #include "behaviours/targetPlayer/targetPlayer.h"
 #include "behaviours/shooting/shooting.h"
 
@@ -35,81 +36,43 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			auto* gameAreaRenderer = new BigNgine::ShaderRendererBehaviour();
 
-			// TODO: Add a game background shader
 			gameAreaRenderer->SetFragShader(FileSystem::LoadFile("assets/shaders/frag/sky.glsl"));
 
 			gameArea->AddBehaviour(gameAreaRenderer);
 
 			scene->AddEntity(gameArea);
 
-			// BULLET
-			auto* bullet = new BigNgine::Entity(
-				BigNgine::Vector2(-200.f, -300.f),
-				180.f,
-				BigNgine::Vector2(20.f, 20.f)
-			);
-
-			bullet->SetDepth(-.1f);
-
-			auto* bulletRenderer = new BigNgine::TextureRendererBehaviour();
-
-			bulletRenderer->AddTexture("./assets/img/bullet1.png");
-
-			bullet->AddBehaviour(bulletRenderer);
-			bullet->AddBehaviour(new Touhou::CircleColliderBehaviour());
-			auto* playerRenderer = new BigNgine::TextureRendererBehaviour();
-			scene->AddEntity(bullet);
-
 			// PLAYER
-			auto* player = new BigNgine::Entity(
-				BigNgine::Vector2(-200.f, 0.f),
+			Touhou::CreatePlayer(scene, gameArea);
+
+			// DUMMY ENEMY
+			BigNgine::Entity* dummy = new BigNgine::Entity(
+				BigNgine::Vector2(
+					gameAreaHorizontalMargin + gameAreaWidth / 2.f - game->GetWindowWidth() / 2.f,
+					gameAreaVerticalMargin + 20.f - game->GetWindowHeight() / 2.f
+				),
 				0.f,
 				BigNgine::Vector2(100.f, 100.f)
 			);
-			auto* playerCollider = new BigNgine::Entity(
-				BigNgine::Vector2(-200.f, 0.f),
-				0.f,
-				BigNgine::Vector2(40.f, 40.f)
-			);
-			player->SetDepth(0.f);
 
+			dummy->SetDepth(.1f);
 
-			bullet->AddBehaviour(new Touhou::BulletBehaviour(BigNgine::Vector2(0.f, 0.f)));
-			bullet->AddBehaviour(new Touhou::TargetPlayerBehaviour(playerCollider, 0.5f, 500));
+			dummy->tag = "Enemy";
 
-			playerRenderer->AddTexture("./assets/img/mariss.png");
+			BigNgine::TextureRendererBehaviour* dummyRenderer = new BigNgine::TextureRendererBehaviour();
 
-			player->AddBehaviour(new BigNgine::FollowBehaviour(playerCollider, player->size/-2.));
-			player->AddBehaviour(playerRenderer);
-			player->AddBehaviour(new Touhou::ShootingBehaviour(gameArea));
+			dummyRenderer->name = "dummy_renderer";
 
-			auto* playerColliderBehaviour = new Touhou::CircleColliderBehaviour();
+			dummyRenderer->AddTexture("./assets/img/mariss.png");
 
-			playerCollider->AddBehaviour(new Touhou::PlayerMovement(gameArea));
-			playerCollider->AddBehaviour(playerColliderBehaviour);
+			dummy->AddBehaviour(dummyRenderer);
+			dummy->AddBehaviour(new Touhou::EnemyBehaviour());
+			dummy->AddBehaviour(new Touhou::CircleColliderBehaviour());
 
-			scene->AddEntity(playerCollider);
-			scene->AddEntity(player);
-
-			// DEBUGGER
-			auto* debugger = new BigNgine::Entity(
-				BigNgine::Vector2(850., 100.),
-				0.,
-				BigNgine::Vector2(0.,0.)
-			);
-			
-			auto* debuggerRenderer = new BigNgine::TextRendererBehaviour();
-			debugger->AddBehaviour(debuggerRenderer);
-			debuggerRenderer->SetFontSize(24);
-			debuggerRenderer->SetText("no");
-			scene->AddEntity(debugger);
-
-			playerColliderBehaviour->SetCallback([debuggerRenderer](Touhou::CircleColliderBehaviour* collider) {
-				debuggerRenderer->SetText("yes");
-			});
+			scene->AddEntity(dummy);
 		},
 		[](BigNgine::Scene* scene, int deltaTime) -> void {
-
+			
 		}
 	);
 	

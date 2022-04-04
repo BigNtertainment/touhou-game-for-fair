@@ -31,3 +31,7 @@ void BigNgine::Behaviour::SetActive(bool _active) {
 		Disable();
 	}
 }
+
+BigNgine::Entity* BigNgine::Behaviour::GetParent() {
+	return parent;
+}

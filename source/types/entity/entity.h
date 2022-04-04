@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include "../vector2/vector2.h"
 #include "../behaviour/behaviour.h"
 #include "../scene/scene.h"
@@ -27,6 +28,8 @@ namespace BigNgine {
 		float rotation;
 		BigNgine::Vector2 size;
 		float depth;
+
+		std::string tag = "Entity";
 		
 		///	Set entities depth
 		///	@info the bigger the number the further the shit away
@@ -74,12 +77,17 @@ namespace BigNgine {
 
 		void Start();
 		void Update(int deltaTime);
+		void Destroy();
 
 		Scene* GetParentScene();
 
 		void SetActive(bool _active);
 
+		bool IsActive();
+
 		~Entity();
+
+		void operator delete(void* ptr);
 
 	private:
 		Scene* parentScene;

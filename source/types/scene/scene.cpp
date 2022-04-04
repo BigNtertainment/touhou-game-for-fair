@@ -44,6 +44,22 @@ std::vector<Input::Callback *> BigNgine::Scene::GetCallbacks()
 	return callbacks;
 }
 
+void BigNgine::Scene::RemoveEntity(Entity* entity) {
+	if(entity == nullptr) {
+		Logger::Error("Removed entity is nullptr");
+		return;
+	}
+
+	// Remove the entity from the scene entities vector
+	entities.erase(std::remove(entities.begin(), entities.end(), entity), entities.end());
+
+	// If this scene is currently running, call the entity start method
+	delete entity;
+
+	// Set the entity to nullptr to avoid double deletion
+	entity = nullptr;
+}
+
 int BigNgine::Scene::GetActiveTime()
 {
 	return activeTime;
@@ -60,7 +76,7 @@ void BigNgine::Scene::Start()
 	AddEntity(Camera);
 	
 	_Start(this);
-	for (auto &entity: entities)
+	for (auto* entity: entities)
 	{
 		entity->Start();
 	}
@@ -75,31 +91,57 @@ void BigNgine::Scene::Update(int deltaTime)
 	activeTime += deltaTime;
 	
 	_Update(this, deltaTime);
-	for (auto &entity: entities)
+
+	size_t size = entities.size();
+
+	for (int i = 0; i < size; i++)
 	{
+		if(entities[i] == nullptr) {
+			Logger::Error("Entity is nullptr");
+			continue;
+		}
+
+		BigNgine::Entity* entity = entities[i];
+
 		entity->Update(deltaTime);
+
+		if(entity == nullptr) {
+			i--;
+		}
+
+		// Update size in case the Update function changed it
+		size = entities.size();
 	}
 }
 
 BigNgine::Scene::~Scene()
 {
-	for (auto &entity : entities)
+	for (auto* entity : entities)
 	{
 		delete entity;
+
+		entity = nullptr;
 	}
 
-	for (auto &callback : callbacks)
+	for (auto* callback : callbacks)
 	{
 		delete callback;
+
+		callback = nullptr;
 	}
 
-	delete world;
-	delete gravity;
-	
+	world = nullptr;
+	gravity = nullptr;
+
 	Scene::scenes.erase(std::remove(Scene::scenes.begin(), Scene::scenes.end(), this), Scene::scenes.end());
 }
 
 std::vector<BigNgine::Scene *> BigNgine::Scene::GetScenes()
 {
 	return BigNgine::Scene::scenes;
+}
+
+std::vector<BigNgine::Entity*> BigNgine::Scene::GetEntities()
+{
+	return entities;
 }
