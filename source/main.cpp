@@ -4,6 +4,7 @@
 #include "behaviours/enemy/enemy.h"
 #include "behaviours/circleCollider/circleCollider.h"
 #include "other/createPlayer/createPlayer.h"
+#include "other/createEnemy/createEnemy.h"
 #include "behaviours/targetPlayer/targetPlayer.h"
 #include "behaviours/shooting/shooting.h"
 #include "behaviours/enemyMovement/enemyMovement.h"
@@ -47,46 +48,16 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			Touhou::CreatePlayer(scene, gameArea);
 
 			// DUMMY ENEMY
-			BigNgine::Entity* dummy = new BigNgine::Entity(
-				BigNgine::Vector2(
-					gameAreaHorizontalMargin + gameAreaWidth / 2.f - game->GetWindowWidth() / 2.f,
-					gameAreaVerticalMargin + 20.f - game->GetWindowHeight() / 2.f
-				),
-				0.f,
-				BigNgine::Vector2(100.f, 100.f)
-			);
-
-			dummy->SetDepth(.1f);
-
-			dummy->tag = "Enemy";
-
-			BigNgine::TextureRendererBehaviour* dummyRenderer = new BigNgine::TextureRendererBehaviour();
-
-			dummyRenderer->name = "dummy_renderer";
-
-			dummyRenderer->AddTexture("./assets/img/mariss.png");
-
-			dummy->AddBehaviour((BigNgine::Behaviour*)dummyRenderer);
-			dummy->AddBehaviour((BigNgine::Behaviour*)new Touhou::EnemyBehaviour());
-			dummy->AddBehaviour((BigNgine::Behaviour*)new Touhou::CircleColliderBehaviour());
-			dummy->AddBehaviour(
-				(BigNgine::Behaviour*)new Touhou::EnemyMovementBehaviour(
+			Touhou::CreateSmallEnemy(
+				scene,
+				gameArea,
+				Touhou::ComeAndGo(
 					gameArea,
-					[](int time) -> BigNgine::Vector2 {
-						float frame = time / 12000.f;
-						
-						if(frame < 0.5f)
-							return BigNgine::Vector2(0.5f, frame);
-						
-						if(frame < 1.f)
-							return BigNgine::Vector2(0.5f, 0.5f);
-						
-						return BigNgine::Vector2(1.5f - frame, 0.5f);
-					}
+					BigNgine::Vector2(0.3f, 0.3f),
+					0.2f,
+					2.f
 				)
 			);
-
-			scene->AddEntity(dummy);
 		},
 		[](BigNgine::Scene* scene, int deltaTime) -> void {
 			
