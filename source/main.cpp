@@ -36,6 +36,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			gameArea->SetDepth(.2f);
 
+			gameArea->tag = "GameArea";
+
 			auto* gameAreaRenderer = new BigNgine::ShaderRendererBehaviour();
 
 			gameAreaRenderer->SetFragShader(FileSystem::LoadFile("assets/shaders/frag/sky.glsl"));

@@ -22,6 +22,8 @@ namespace Touhou {
 
 		void SetCallback(ColliderCallback _callback);
 
+		~CircleColliderBehaviour();
+
 	private:
 		ColliderCallback callback = [](CircleColliderBehaviour*) {};
 	};

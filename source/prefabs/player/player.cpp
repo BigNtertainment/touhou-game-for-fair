@@ -18,6 +18,8 @@ BigNgine::Entity* Touhou::Player::Create(void** args) {
 
 	player->SetDepth(0.f);
 
+	player->tag = "Player";
+
 	auto* playerRenderer = new BigNgine::TextureRendererBehaviour();
 
 	playerRenderer->AddTexture("./assets/img/mariss.png");

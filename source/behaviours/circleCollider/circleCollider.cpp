@@ -4,6 +4,15 @@ auto Touhou::CircleColliderBehaviour::colliders = std::vector<CircleColliderBeha
 
 void Touhou::CircleColliderBehaviour::Start()
 {
+	// Check if collider already exists
+	auto it = std::find_if(colliders.begin(), colliders.end(), [this](CircleColliderBehaviour* collider) {
+		return collider->GetParent() == parent;
+	});
+
+	// If collider already exists, remove it
+	if (it != colliders.end())
+		colliders.erase(it);
+
 	colliders.push_back(this);
 }
 
@@ -22,9 +31,15 @@ void Touhou::CircleColliderBehaviour::Update(int deltaTime)
 			encounteredThis = true;
 			continue;
 		}
+
+		if(collider == nullptr) {
+			Logger::Error("Collider is nullptr");
+			continue;
+		}
+
 		if(!encounteredThis)
 			continue;
-		
+
 		if(collider->active && this->IsColliding(collider))
 		{
 			collider->callback(this);
@@ -62,4 +77,9 @@ bool Touhou::CircleColliderBehaviour::IsColliding(Touhou::CircleColliderBehaviou
 void Touhou::CircleColliderBehaviour::SetCallback(ColliderCallback _callback)
 {
 	callback = _callback;
+}
+
+Touhou::CircleColliderBehaviour::~CircleColliderBehaviour()
+{
+	Destroy();
 }
