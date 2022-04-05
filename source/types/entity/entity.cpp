@@ -8,7 +8,7 @@ void BigNgine::Entity::SetDepth(float _depth)
 	depth = _depth;
 }
 
-void BigNgine::Entity::AddBehaviour(BigNgine::Behaviour* behaviour) {
+void BigNgine::Entity::AddBehaviour(BigNgine::Behaviour * behaviour) {
 	behaviour->parent = this;
 
 	behaviours.push_back(behaviour);
@@ -59,11 +59,13 @@ bool BigNgine::Entity::IsActive() {
 
 BigNgine::Entity::~Entity() {
 	// We do it like that because the behaviour gets deleted from the vector automatically, making the next element index zero
-	for(int i = 0; i < behaviours.size(); i++) {
+	for(int i = 0; (unsigned long long) i < behaviours.size(); i++) {
 		delete behaviours[0];
 	}
 }
 
 void BigNgine::Entity::operator delete(void* ptr) {
-	free(ptr);
+	// Logger::Log("now i die");
+	if(ptr)
+		free(ptr);
 }

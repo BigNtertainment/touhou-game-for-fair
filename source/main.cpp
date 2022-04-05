@@ -7,6 +7,7 @@
 #include "other/createEnemy/createEnemy.h"
 #include "behaviours/targetPlayer/targetPlayer.h"
 #include "behaviours/shooting/shooting.h"
+#include "behaviours/enemyMovement/enemyMovement.h"
 
 void Start()
 {
@@ -48,10 +49,31 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			// DUMMY ENEMY
 
-			Touhou::CreateEnemy(scene, gameArea, BigNgine::Vector2(
-					gameAreaHorizontalMargin +  gameAreaWidth / 2.f -  game->GetWindowWidth() / 2.f,
-					gameAreaVerticalMargin + 20.f - game->GetWindowHeight() / 2.f
-				));
+			dummyRenderer->name = "dummy_renderer";
+
+			dummyRenderer->AddTexture("./assets/img/mariss.png");
+
+			dummy->AddBehaviour((BigNgine::Behaviour*)dummyRenderer);
+			dummy->AddBehaviour((BigNgine::Behaviour*)new Touhou::EnemyBehaviour());
+			dummy->AddBehaviour((BigNgine::Behaviour*)new Touhou::CircleColliderBehaviour());
+			dummy->AddBehaviour(
+				(BigNgine::Behaviour*)new Touhou::EnemyMovementBehaviour(
+					gameArea,
+					[](int time) -> BigNgine::Vector2 {
+						float frame = time / 12000.f;
+						
+						if(frame < 0.5f)
+							return BigNgine::Vector2(0.5f, frame);
+						
+						if(frame < 1.f)
+							return BigNgine::Vector2(0.5f, 0.5f);
+						
+						return BigNgine::Vector2(1.5f - frame, 0.5f);
+					}
+				)
+			);
+
+			scene->AddEntity(dummy);
 		},
 		[](BigNgine::Scene* scene, int deltaTime) -> void {
 			
@@ -70,7 +92,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			);
 
 			auto* titleRenderer = new BigNgine::TextRendererBehaviour();
-			title->AddBehaviour(titleRenderer);
+			title->AddBehaviour((BigNgine::Behaviour*)titleRenderer);
 			titleRenderer->SetFontSize(24);
 			titleRenderer->SetMarginBottom(12);
 			titleRenderer->SetText("Touhou\nThe Kerfuffle\nof\nThe Lackadaisical\nRagamuffin");
@@ -84,7 +106,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			);
 
 			menuRenderer = new BigNgine::TextRendererBehaviour();
-			menu->AddBehaviour(menuRenderer);
+			menu->AddBehaviour((BigNgine::Behaviour*)menuRenderer);
 			menuRenderer->SetFontSize(24);
 			menuRenderer->SetMarginBottom(72);
 			menuRenderer->SetText(" Start\n Exit");
@@ -118,7 +140,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			);
 			chimata->SetDepth(0.0f);
 			auto* chimataRenderer = new BigNgine::TextureRendererBehaviour();
-			chimata->AddBehaviour(chimataRenderer);
+			chimata->AddBehaviour((BigNgine::Behaviour*)chimataRenderer);
 			chimataRenderer->AddTexture("./assets/img/chimata_main_menu.png");
 			scene->AddEntity(chimata);
 

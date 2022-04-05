@@ -107,8 +107,12 @@ void BigNgine::Game::Start(BigNgine::Scene* firstScene, game_startfunc Start, ga
 		// Update the active scene
 		activeScene->Update(deltaTime);
 
+		if(glfwWindowShouldClose(window)) {
+			break;
+		}
+
 		// Update the frame
-		glfwSwapBuffers(Game::window);
+		glfwSwapBuffers(window);
 
 		// Poll the events so the game doesn't crash
 		glfwPollEvents();
@@ -121,6 +125,10 @@ void BigNgine::Game::Start(BigNgine::Scene* firstScene, game_startfunc Start, ga
 		{
 			std::chrono::milliseconds timespan((int)(16.666f - deltaTime));
 			std::this_thread::sleep_for(std::chrono::milliseconds(timespan));
+		}
+
+		if(glfwWindowShouldClose(window)) {
+			break;
 		}
 
 		// Update the window size
@@ -147,7 +155,7 @@ void BigNgine::Game::Start(BigNgine::Scene* firstScene, game_startfunc Start, ga
 
 	// Finish off GLFW
 	window = nullptr;
-	glfwTerminate();
+	// glfwTerminate();
 
 	// Delete the game instance
 	delete this;
@@ -166,9 +174,9 @@ void BigNgine::Game::SetActiveScene(BigNgine::Scene* scene) {
 	if(activeScene != nullptr)
 		delete activeScene;
 
-	activeScene = scene;
+	scene->Start();
 
-	activeScene->Start();
+	activeScene = scene;
 }
 
 void BigNgine::Game::ResizeWindow(uint32_t width, uint32_t height)

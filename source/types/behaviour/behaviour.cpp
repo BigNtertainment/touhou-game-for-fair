@@ -9,7 +9,7 @@ BigNgine::Behaviour::~Behaviour() {
 }
 
 void BigNgine::Behaviour::Start() {}
-void BigNgine::Behaviour::Update(int deltaTime) {}
+void BigNgine::Behaviour::Update(int) {}
 void BigNgine::Behaviour::Destroy() {}
 void BigNgine::Behaviour::OnEnable() {}
 void BigNgine::Behaviour::OnDisable() {}
