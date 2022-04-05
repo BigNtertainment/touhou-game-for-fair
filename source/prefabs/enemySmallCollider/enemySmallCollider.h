@@ -12,6 +12,7 @@ namespace Touhou {
 		/// @param void** args Arguments:
 		/// - gameArea (BigNgine::Entity*)
         /// - movement function (Touhou::EnemyMovementBehaviour::MovementFunction)
+		/// - enemy model (BigNgine::Entity*)
 		BigNgine::Entity* Create(void** args) override;
 	};
 }

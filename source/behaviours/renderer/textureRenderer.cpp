@@ -100,8 +100,8 @@ void BigNgine::TextureRendererBehaviour::Start()
 		texture = new Texture("");
 		return;
 	}
-	texture = new Texture(texturePaths[0]);
 
+	texture = new Texture(texturePaths[0]);
 }
 
 void BigNgine::TextureRendererBehaviour::Update(int deltaTime)
@@ -148,7 +148,6 @@ void BigNgine::TextureRendererBehaviour::Update(int deltaTime)
 
 	// doing this so on first frame time is always 0
 	time += deltaTime;
-	
 }
 
 void BigNgine::TextureRendererBehaviour::Destroy()

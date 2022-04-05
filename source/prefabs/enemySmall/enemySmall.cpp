@@ -12,9 +12,7 @@ BigNgine::Entity* Touhou::EnemySmall::Create(void** args) {
 
 	BigNgine::TextureRendererBehaviour *renderer = new BigNgine::TextureRendererBehaviour();
 
-	Logger::Log(enemyTexture);
-	Logger::Log(enemyTexture.c_str());
-	renderer->AddTexture(enemyTexture.c_str());
+	renderer->AddTexture("./assets/img/mariss.png");
 
 	enemy->AddBehaviour(renderer);
 

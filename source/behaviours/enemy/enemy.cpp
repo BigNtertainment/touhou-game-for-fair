@@ -1,5 +1,7 @@
 #include "enemy.h"
 
+Touhou::EnemyBehaviour::EnemyBehaviour(BigNgine::Entity* _model) : model(_model) {}
+
 void Touhou::EnemyBehaviour::Damage() {
 	health--;
 
@@ -11,6 +13,9 @@ void Touhou::EnemyBehaviour::Damage() {
 void Touhou::EnemyBehaviour::Die() {
 	Logger::Log("Enemy died");
 
-	// It also deletes the behaviour
-	delete parent;
+	// Delete the model
+	parent->GetParentScene()->RemoveEntity(model);
+
+	// It also deletes the behaviours
+	parent->GetParentScene()->RemoveEntity(parent);
 }

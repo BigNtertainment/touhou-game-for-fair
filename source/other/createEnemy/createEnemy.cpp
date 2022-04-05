@@ -9,31 +9,23 @@ void Touhou::CreateSmallEnemy(
 	BigNgine::Entity *gameArea,
 	Touhou::EnemyMovementBehaviour::MovementFunction movementFunction
 ) {
+	auto enemyPrefab = EnemySmall();
+
 	void* args[] = {
-		gameArea,
-		(void*)&movementFunction
+		gameArea
 	};
 
-	auto colliderPrefab = EnemySmallCollider();
-
 	scene->AddPrefab(
-		colliderPrefab, args, [gameArea, scene] (BigNgine::Entity* collider) {
+		enemyPrefab, args, [gameArea, scene, &movementFunction] (BigNgine::Entity* model) {
+			auto colliderPrefab = EnemySmallCollider();
+
 			void* args[] = {
-				gameArea
+				gameArea,
+				(void*)&movementFunction,
+				model
 			};
 
-			auto enemyPrefab = EnemySmall();
-
-			scene->AddPrefab(
-				enemyPrefab, args, [collider] (BigNgine::Entity* entity) {
-					entity->AddBehaviour(
-						new BigNgine::FollowBehaviour(
-							collider,
-							entity->size / -2.f + collider->size / 2.f
-						)
-					);
-				}
-			);
+			scene->AddPrefab(colliderPrefab, args);
 		}
 	);
 }
