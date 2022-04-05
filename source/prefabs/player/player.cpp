@@ -15,7 +15,7 @@ BigNgine::Entity* Touhou::Player::Create(void** args) {
 		0.f,
 		playerSize
 	);
-
+// TODO(tymon): wtf???
 	player->SetDepth(1.f);
 
 	auto* playerRenderer = new BigNgine::TextureRendererBehaviour();
