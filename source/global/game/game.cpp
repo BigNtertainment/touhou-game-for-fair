@@ -174,9 +174,9 @@ void BigNgine::Game::SetActiveScene(BigNgine::Scene* scene) {
 	if(activeScene != nullptr)
 		delete activeScene;
 
-	activeScene = scene;
+	scene->Start();
 
-	activeScene->Start();
+	activeScene = scene;
 }
 
 void BigNgine::Game::ResizeWindow(uint32_t width, uint32_t height)
