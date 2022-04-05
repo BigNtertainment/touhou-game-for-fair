@@ -7,7 +7,7 @@ BigNgine::Vector2 Normalize(BigNgine::Vector2 vector)
 	if(length == 0.f)
 		return vector;
 
-	return BigNgine::Vector2(vector.x / length, vector.y / length);
+	return {vector.x / length, vector.y / length};
 }
 
 Touhou::PlayerMovement::PlayerMovement(BigNgine::Entity* boundBox)
@@ -15,11 +15,21 @@ Touhou::PlayerMovement::PlayerMovement(BigNgine::Entity* boundBox)
 	this->boundBox = boundBox;
 }
 
+void Touhou::PlayerMovement::Start()
+{
+	renderer = parent->GetBehaviour<BigNgine::TextureRendererBehaviour>();
+	textures.push_back(new BigNgine::Texture("assets/img/Chimata_left.png"));
+	textures.push_back(new BigNgine::Texture("assets/img/Chimata_front.png"));
+	textures.push_back(new BigNgine::Texture("assets/img/Chimata_right.png"));
+}
+
 void Touhou::PlayerMovement::Update(int deltaTime) {
 	BigNgine::Vector2 movementVector = BigNgine::Vector2(
 		Input::Get(BIGNGINE_KEY_RIGHT) - Input::Get(BIGNGINE_KEY_LEFT),
 		Input::Get(BIGNGINE_KEY_DOWN) - Input::Get(BIGNGINE_KEY_UP)
 	);
+	
+	renderer->SetTexture(textures[movementVector.x + 1]);
 
 	bool precisionMode = Input::Get(BIGNGINE_KEY_LEFT_SHIFT);
 

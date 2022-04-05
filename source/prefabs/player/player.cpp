@@ -16,7 +16,7 @@ BigNgine::Entity* Touhou::Player::Create(void** args) {
 		playerSize
 	);
 
-	player->SetDepth(0.f);
+	player->SetDepth(1.f);
 
 	auto* playerRenderer = new BigNgine::TextureRendererBehaviour();
 

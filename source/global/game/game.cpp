@@ -61,7 +61,7 @@ void BigNgine::Game::Start(BigNgine::Scene* firstScene, game_startfunc Start, ga
 	// with LESS depth-testing interprets a smaller depth value as meaning "closer"
 //	TODO(imustend): make it GL_GREATER
 //	 and write disclaimer
-	glDepthFunc(GL_NEVER);
+	glDepthFunc(GL_LESS);
 
 	glViewport(0, 0, width, height);
 

@@ -49,31 +49,31 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			// DUMMY ENEMY
 
-			dummyRenderer->name = "dummy_renderer";
+			// dummyRenderer->name = "dummy_renderer";
 
-			dummyRenderer->AddTexture("./assets/img/mariss.png");
+			// dummyRenderer->AddTexture("./assets/img/mariss.png");
 
-			dummy->AddBehaviour((BigNgine::Behaviour*)dummyRenderer);
-			dummy->AddBehaviour((BigNgine::Behaviour*)new Touhou::EnemyBehaviour());
-			dummy->AddBehaviour((BigNgine::Behaviour*)new Touhou::CircleColliderBehaviour());
-			dummy->AddBehaviour(
-				(BigNgine::Behaviour*)new Touhou::EnemyMovementBehaviour(
-					gameArea,
-					[](int time) -> BigNgine::Vector2 {
-						float frame = time / 12000.f;
+			// dummy->AddBehaviour((BigNgine::Behaviour*)dummyRenderer);
+			// dummy->AddBehaviour((BigNgine::Behaviour*)new Touhou::EnemyBehaviour());
+			// dummy->AddBehaviour((BigNgine::Behaviour*)new Touhou::CircleColliderBehaviour());
+			// dummy->AddBehaviour(
+			// 	(BigNgine::Behaviour*)new Touhou::EnemyMovementBehaviour(
+			// 		gameArea,
+			// 		[](int time) -> BigNgine::Vector2 {
+			// 			float frame = time / 12000.f;
 						
-						if(frame < 0.5f)
-							return BigNgine::Vector2(0.5f, frame);
+			// 			if(frame < 0.5f)
+			// 				return BigNgine::Vector2(0.5f, frame);
 						
-						if(frame < 1.f)
-							return BigNgine::Vector2(0.5f, 0.5f);
+			// 			if(frame < 1.f)
+			// 				return BigNgine::Vector2(0.5f, 0.5f);
 						
-						return BigNgine::Vector2(1.5f - frame, 0.5f);
-					}
-				)
-			);
+			// 			return BigNgine::Vector2(1.5f - frame, 0.5f);
+			// 		}
+			// 	)
+			// );
 
-			scene->AddEntity(dummy);
+			// scene->AddEntity(dummy);
 		},
 		[](BigNgine::Scene* scene, int deltaTime) -> void {
 			

@@ -17,7 +17,7 @@ BigNgine::Entity* Touhou::PlayerBullet::Create(void** args) {
 		bulletSize
 	);
 
-	bullet->SetDepth(0.f);
+	bullet->SetDepth(1.f);
 
 	bullet->tag = "PlayerBullet";
 

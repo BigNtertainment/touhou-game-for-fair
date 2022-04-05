@@ -19,7 +19,7 @@ void Touhou::CreatePlayer(BigNgine::Scene* scene, BigNgine::Entity* gameArea) {
 		};
 
 		scene->AddPrefab(playerColliderPrefab, playerColliderArgs, [player](BigNgine::Entity* playerCollider) {
-			playerCollider->AddBehaviour(new BigNgine::FollowBehaviour(player));
+			playerCollider->AddBehaviour(new BigNgine::FollowBehaviour(player, player->size / 2.f - playerCollider->size / 2.f));
 		});
 	});
 }
