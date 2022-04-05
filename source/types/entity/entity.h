@@ -25,9 +25,9 @@ namespace BigNgine {
 		explicit Entity(const BigNgine::Vector2& _position = DEFAULT_POSITION, float _rotation = DEFAULT_ROTATION, const BigNgine::Vector2& _size = DEFAULT_SIZE);
 
 		BigNgine::Vector2 position;
-		float rotation;
+		float rotation = 0.0f;
 		BigNgine::Vector2 size;
-		float depth;
+		float depth = 0.0f;
 
 		std::string tag = "Entity";
 		
@@ -91,6 +91,6 @@ namespace BigNgine {
 
 	private:
 		Scene* parentScene;
-		std::vector<Behaviour*> behaviours;
+		std::vector<Behaviour*> behaviours = std::vector<Behaviour*>();
 	};
 }

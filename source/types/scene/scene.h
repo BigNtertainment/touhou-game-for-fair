@@ -69,8 +69,8 @@ namespace BigNgine {
 		std::vector<Input::Callback*> GetCallbacks();
 		std::vector<Entity*> GetEntities();
 	private:
-		std::vector<Entity*> entities;
-		std::vector<Input::Callback*> callbacks;
+		std::vector<Entity*> entities = std::vector<Entity*>();
+		std::vector<Input::Callback*> callbacks = std::vector<Input::Callback*>();
 
 		static std::vector<Scene*> scenes;
 

@@ -1,6 +1,6 @@
 #include "./scene.h"
 
-std::vector<BigNgine::Scene *> BigNgine::Scene::scenes;
+std::vector<BigNgine::Scene *> BigNgine::Scene::scenes = std::vector<BigNgine::Scene*>();
 
 BigNgine::Scene::Scene(SceneStartFunction Start, SceneUpdateFunction Update)
 {
@@ -94,6 +94,7 @@ void BigNgine::Scene::Update(int deltaTime)
 
 	size_t size = entities.size();
 
+	
 	for (int i = 0; i < size; i++)
 	{
 		if(entities[i] == nullptr) {
@@ -103,7 +104,9 @@ void BigNgine::Scene::Update(int deltaTime)
 
 		BigNgine::Entity* entity = entities[i];
 
+
 		entity->Update(deltaTime);
+
 
 		if(entity == nullptr) {
 			i--;

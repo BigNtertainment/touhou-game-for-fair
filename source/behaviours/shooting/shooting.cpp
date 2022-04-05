@@ -11,11 +11,11 @@ void Touhou::ShootingBehaviour::Update(int deltaTime) {
 		auto bulletPrefab = PlayerBullet();
 
 		BigNgine::Vector2 bulletPosition = parent->position + parent->size / 2.f - PlayerBullet::bulletSize / 2.f;
-		BigNgine::Vector2 bulletDirection = BigNgine::Vector2(0.f, -bulletSpeed);
 
 		void* args[] = {
 			(void*)&bulletPosition,
 			(void*)&bulletDirection,
+			(void*)&bulletSpeed,    
 			(void*)boundBox
 		};
 

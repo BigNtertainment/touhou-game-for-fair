@@ -4,6 +4,7 @@
 #include "behaviours/enemy/enemy.h"
 #include "behaviours/circleCollider/circleCollider.h"
 #include "other/createPlayer/createPlayer.h"
+#include "other/createEnemy/createEnemy.h"
 #include "behaviours/targetPlayer/targetPlayer.h"
 #include "behaviours/shooting/shooting.h"
 
@@ -46,30 +47,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			Touhou::CreatePlayer(scene, gameArea);
 
 			// DUMMY ENEMY
-			BigNgine::Entity* dummy = new BigNgine::Entity(
-				BigNgine::Vector2(
-					gameAreaHorizontalMargin + gameAreaWidth / 2.f - game->GetWindowWidth() / 2.f,
+
+			Touhou::CreateEnemy(scene, gameArea, BigNgine::Vector2(
+					gameAreaHorizontalMargin +  gameAreaWidth / 2.f -  game->GetWindowWidth() / 2.f,
 					gameAreaVerticalMargin + 20.f - game->GetWindowHeight() / 2.f
-				),
-				0.f,
-				BigNgine::Vector2(100.f, 100.f)
-			);
-
-			dummy->SetDepth(.1f);
-
-			dummy->tag = "Enemy";
-
-			BigNgine::TextureRendererBehaviour* dummyRenderer = new BigNgine::TextureRendererBehaviour();
-
-			dummyRenderer->name = "dummy_renderer";
-
-			dummyRenderer->AddTexture("./assets/img/mariss.png");
-
-			dummy->AddBehaviour(dummyRenderer);
-			dummy->AddBehaviour(new Touhou::EnemyBehaviour());
-			dummy->AddBehaviour(new Touhou::CircleColliderBehaviour());
-
-			scene->AddEntity(dummy);
+				));
 		},
 		[](BigNgine::Scene* scene, int deltaTime) -> void {
 			
@@ -152,6 +134,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
  
 	auto* TitleScreen = new BigNgine::Scene(
 		[game](BigNgine::Scene* scene) -> void {
+			Logger::Log("Second scene Loading...");
 			auto* title = new BigNgine::Entity(
 				BigNgine::Vector2(-600.f, -400.f),
 				0.f,
@@ -165,9 +148,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			title->AddBehaviour(renderer);
 
 			scene->AddEntity(title);
-	
+			Logger::Success("second sceen loaded");
 		},
 		[game, MainMenu](BigNgine::Scene* scene, int deltaTime) -> void {
+			Logger::Log("Second scene running...");
 			if(scene->GetActiveTime() >= 3500 || Input::Get(BIGNGINE_KEY_SPACE)) {
 				game->SetActiveScene(MainMenu);
 			}
@@ -176,7 +160,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 	auto* load = new BigNgine::Scene(
 		[](BigNgine::Scene* scene) -> void {
-
+			Logger::Log("First scene Loading...");
+			Logger::Success("first sceen loaded");
 		},
 		[game, TitleScreen](BigNgine::Scene* scene, int deltaTime) -> void {
 			if(scene->GetActiveTime() >= 1000)

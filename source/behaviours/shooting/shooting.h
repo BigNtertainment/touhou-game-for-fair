@@ -6,6 +6,7 @@ namespace Touhou {
 	class ShootingBehaviour : public BigNgine::Behaviour {
 		float cooldownTimer = 0.f;
 		const float bulletSpeed = 600.f;
+		const float bulletDirection =-90.f;
 
 		BigNgine::Entity* boundBox;
 	public:

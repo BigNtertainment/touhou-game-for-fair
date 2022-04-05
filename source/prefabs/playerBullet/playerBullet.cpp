@@ -4,6 +4,7 @@
 #include "behaviours/renderer/renderer.h"
 #include "behaviours/bulletDestruction/bulletDestruction.h"
 #include "behaviours/circleCollider/circleCollider.h"
+#include "behaviours/moveOnLine/moveOnLine.h"
 #include "behaviours/enemy/enemy.h"
 
 const BigNgine::Vector2 Touhou::PlayerBullet::bulletSize = BigNgine::Vector2(20.f, 20.f);
@@ -20,7 +21,8 @@ BigNgine::Entity* Touhou::PlayerBullet::Create(void** args) {
 
 	bullet->tag = "PlayerBullet";
 
-	bullet->AddBehaviour(new BulletBehaviour(*(BigNgine::Vector2*)args[1]));
+	bullet->AddBehaviour(new BulletBehaviour(BigNgine::Vector2(0.0f, 0.0f)));
+	bullet->AddBehaviour(new MoveOnLineBehaviour(*(float*)args[1], *(float*)args[2]));
 
 	BigNgine::TextureRendererBehaviour* renderer = new BigNgine::TextureRendererBehaviour();
 
@@ -30,7 +32,7 @@ BigNgine::Entity* Touhou::PlayerBullet::Create(void** args) {
 
 	bullet->AddBehaviour(renderer);
 
-	auto* bulletDestruction = new BulletDestructionBehaviour((BigNgine::Entity*)args[2]);
+	auto* bulletDestruction = new BulletDestructionBehaviour((BigNgine::Entity*)args[3]);
 
 	bulletDestruction->name = "playerBullet_destruction";
 
