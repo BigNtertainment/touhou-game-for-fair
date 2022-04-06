@@ -6,15 +6,13 @@
 namespace Touhou {
 	class EnemyBullet : public BigNgine::Prefab {
 	public:
-		static const BigNgine::Vector2 bulletSize;
-		std::string texturePath = "./assets/img/bullet1.png";
+		std::string texturePath = "assets/textures/bullet1.png";
 
 		/// @brief Creates a new player bullet.
-		/// @param void** Arguments
+		/// @param void** Arguments:
 		/// - position (BigNgine::Vector2)
-		/// - velocity (int)
-		/// - player (BigNgine::Entity*)
-		/// - gameArea (BigNgine::Entity*)
+		/// - size (BigNgine::Vector2)
+		/// - game area (BigNgine::Entity*)
 		BigNgine::Entity* Create(void** args) override;
 	};
 }
