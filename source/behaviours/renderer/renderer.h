@@ -143,6 +143,7 @@ namespace BigNgine
 
 		void SetColor(Vector3 color);
 	
+		int rainbow = 1;
 	private:
 		FT_Library ft;
 		FT_Face face;

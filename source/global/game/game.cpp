@@ -27,7 +27,7 @@ void BigNgine::Game::Start(BigNgine::Scene* firstScene, game_startfunc Start, ga
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	// Creating window
 	window = glfwCreateWindow(width, height, name, nullptr, nullptr);
@@ -61,7 +61,7 @@ void BigNgine::Game::Start(BigNgine::Scene* firstScene, game_startfunc Start, ga
 	// with LESS depth-testing interprets a smaller depth value as meaning "closer"
 //	TODO(imustend): make it GL_GREATER
 //	 and write disclaimer
-	glDepthFunc(GL_LESS);
+	glDepthFunc(GL_NONE);
 
 	glViewport(0, 0, width, height);
 

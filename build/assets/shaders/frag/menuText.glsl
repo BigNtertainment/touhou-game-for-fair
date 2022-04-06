@@ -6,6 +6,7 @@ in vec2 TexCoord;
 uniform vec3 u_color;
 uniform vec2 u_resolution;
 uniform int u_time;
+uniform int u_rainbow;
 
 uniform sampler2D Texture;
 
@@ -32,11 +33,15 @@ vec2 getScreenSpace() {
 
 void main() {
     vec2 screenSpace = getScreenSpace() * 4.;
-    vec3 color = vec3(
+    vec3 color_rainbow = vec3(
         0.5 * sin(u_time/1000.0 + screenSpace.x) + 0.5,
         0.5 * sin(u_time/1000.0 + screenSpace.y + PI/2.0) + 0.5,
         0.5 * cos(u_time/1000.0 + (1. - screenSpace.x)) + 0.5
     );
     vec4 sampled = vec4(1.0, 1.0, 1.0, texture(Texture, TexCoord).r);
-    glFragColor = vec4(color, 1.0) * sampled;
+	if (u_rainbow == 1) {
+	    glFragColor = vec4(color_rainbow, 1.0) * sampled;
+	} else {
+		glFragColor = vec4(0.5, 0.5, 0.5, 1.0) * sampled;
+	}
 }

@@ -19,9 +19,9 @@ void Update([[maybe_unused]] int deltaTime)
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 {
-	auto *game = BigNgine::Game::GetInstance();
+	auto game = BigNgine::Game::GetInstance();
 
-	auto* gameScene = new BigNgine::Scene(
+	auto gameScene = new BigNgine::Scene(
 		[game](BigNgine::Scene* scene) -> void {
 			// GAME AREA
 			const float gameAreaVerticalMargin = 20.f;
@@ -60,6 +60,24 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 					2.f
 				)
 			);
+
+			// UI
+			auto UI = new BigNgine::Entity(
+				BigNgine::Vector2(-600.f, -400.f),
+				0.f,
+				BigNgine::Vector2(1200.f,800.f)
+			);
+			UI->SetDepth(0.0f);
+			auto UIrenderer = new BigNgine::TextureRendererBehaviour();
+			UIrenderer->SetVertShader(FileSystem::LoadFile("assets/shaders/vert/logo.glsl"));
+			UIrenderer->AddTexture("./assets/img/UI.png");
+			UI->AddBehaviour(UIrenderer);
+			scene->AddEntity(UI);
+			
+//			FIXME(tmyon): when entity is destroyed Ui stops rendering for one frame
+			auto empty = new BigNgine::Entity();
+			scene->AddEntity(empty);
+
 		},
 		[](BigNgine::Scene*, int) -> void {
 			
@@ -67,40 +85,88 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	);
 	
 	int option = 0;
-	BigNgine::TextRendererBehaviour* menuRenderer;
-	auto* MainMenu = new BigNgine::Scene(
-		[&option, &menuRenderer, gameScene, game](BigNgine::Scene* scene) -> void {
+	BigNgine::TextRendererBehaviour* exitRenderer;
+	BigNgine::TextRendererBehaviour* startRenderer;
+	auto MainMenu = new BigNgine::Scene(
+		[&option, &exitRenderer, &startRenderer, gameScene, game](BigNgine::Scene* scene) -> void {
+			
+
+			// BACKGROUND
+			auto background = new BigNgine::Entity(
+				BigNgine::Vector2(-600.f, -400.f),
+				0.f,
+				BigNgine::Vector2(1200.f,800.f)
+			);
+			background->SetDepth(-1.f);
+			auto backRenderer = new BigNgine::TextureRendererBehaviour();
+			backRenderer->SetVertShader(FileSystem::LoadFile("assets/shaders/vert/logo.glsl"));
+			backRenderer->AddTexture("./assets/img/back.jpg");
+			background->AddBehaviour(backRenderer);
+			scene->AddEntity(background);
+			
+			
+			
 			// TITLE
-			auto* title = new BigNgine::Entity(
-				BigNgine::Vector2(0.f, 0.f),
+			auto title = new BigNgine::Entity(
+				BigNgine::Vector2(100.f, 20.f),
 				0.f,
 				BigNgine::Vector2(0.f, 0.f)
 			);
-
-			auto* titleRenderer = new BigNgine::TextRendererBehaviour();
+			
+			auto titleRenderer = new BigNgine::TextRendererBehaviour();
 			title->AddBehaviour((BigNgine::Behaviour*)titleRenderer);
 			titleRenderer->SetFragShader(FileSystem::LoadFile("assets/shaders/frag/MenuText.glsl"));
-			titleRenderer->SetFont("assets/fonts/RubikMoonrocks-Regular.ttf");
+			titleRenderer->SetFont("assets/fonts/UbuntuCondensed-Regular.ttf");
 			titleRenderer->SetFontSize(46);
 			titleRenderer->SetMarginBottom(12);
 			titleRenderer->SetText("Touhou");
 			scene->AddEntity(title);
 
+			// SUBTITLE
+			auto subtitle = new BigNgine::Entity(
+				BigNgine::Vector2(106.f, 66.f),
+				0.f,
+				BigNgine::Vector2(0.f, 0.f)
+			);
+
+			auto subtitleRenderer = new BigNgine::TextRendererBehaviour();
+			subtitle->AddBehaviour((BigNgine::Behaviour*)subtitleRenderer);
+			subtitleRenderer->SetFragShader(FileSystem::LoadFile("assets/shaders/frag/MenuText.glsl"));
+			subtitleRenderer->SetFont("assets/fonts/UbuntuCondensed-Regular.ttf");
+			subtitleRenderer->SetFontSize(16);
+			subtitleRenderer->SetMarginBottom(12);
+			subtitleRenderer->SetText("The Kerfuffle of The Lackadaisical Ragamuffin");
+			scene->AddEntity(subtitle);
+
+
 			// MENU
-			auto* menu = new BigNgine::Entity(
+			auto start = new BigNgine::Entity(
 				BigNgine::Vector2(100.f, 290.f),
 				0.f,
 				BigNgine::Vector2(0.f, 0.f)
 			);
 
-			menuRenderer = new BigNgine::TextRendererBehaviour();
-			menu->AddBehaviour((BigNgine::Behaviour*)menuRenderer);
-			menuRenderer->SetFragShader(FileSystem::LoadFile("assets/shaders/frag/MenuText.glsl"));
-			menuRenderer->SetFont("assets/fonts/RubikMoonrocks-Regular.ttf");
-			menuRenderer->SetFontSize(24);
-			menuRenderer->SetMarginBottom(72);
-			menuRenderer->SetText(" Start\n Exit");
-			scene->AddEntity(menu);
+			startRenderer = new BigNgine::TextRendererBehaviour();
+			start->AddBehaviour((BigNgine::Behaviour*)startRenderer);
+			startRenderer->SetFragShader(FileSystem::LoadFile("assets/shaders/frag/MenuText.glsl"));
+			startRenderer->SetFont("assets/fonts/MeriendaOne-Regular.ttf");
+			startRenderer->SetFontSize(24);
+			startRenderer->SetText("Start");
+			scene->AddEntity(start);
+
+			auto exit = new BigNgine::Entity(
+				BigNgine::Vector2(100.f, 386.f),
+				0.f,
+				BigNgine::Vector2(0.f, 0.f)
+			);
+
+			exitRenderer = new BigNgine::TextRendererBehaviour();
+			exit->AddBehaviour((BigNgine::Behaviour*)exitRenderer);
+			exitRenderer->SetFragShader(FileSystem::LoadFile("assets/shaders/frag/MenuText.glsl"));
+			exitRenderer->SetFont("assets/fonts/MeriendaOne-Regular.ttf");
+			exitRenderer->SetFontSize(24);
+			exitRenderer->SetText("Exit");
+			scene->AddEntity(exit);
 
 
 			scene->AddCallback(new Input::Callback([&option, gameScene, game](int key, int, int) -> void {
@@ -122,14 +188,14 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				}
 			}));
 
-
-			auto* chimata = new BigNgine::Entity(
+			// CHIMATA SPRITE
+			auto chimata = new BigNgine::Entity(
 				BigNgine::Vector2(100.f, -130.f),
 				0.f,
 				BigNgine::Vector2(305.f, 447.f)
 			);
 			chimata->SetDepth(0.0f);
-			auto* chimataRenderer = new BigNgine::TextureRendererBehaviour();
+			auto chimataRenderer = new BigNgine::TextureRendererBehaviour();
 			chimata->AddBehaviour((BigNgine::Behaviour*)chimataRenderer);
 			chimataRenderer->AddTexture("./assets/img/chimata_main_menu.png");
 			scene->AddEntity(chimata);
@@ -149,25 +215,28 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			scene->AddEntity(discleaimer);
 
 		},
-		[game, gameScene, &option, &menuRenderer](BigNgine::Scene* scene, int deltaTime) -> void {
-			if(option == 0)
-				menuRenderer->SetText(">Start\n Exit");
-			else if(option == 1)
-				menuRenderer->SetText(" Start\n>Exit");
+		[game, gameScene, &option, &startRenderer, &exitRenderer](BigNgine::Scene* scene, int deltaTime) -> void {
+			if(option == 0){
+				startRenderer->rainbow = 1;
+				exitRenderer->rainbow = 0;
+			} else if(option == 1) {
+				startRenderer->rainbow = 0;
+				exitRenderer->rainbow = 1;
+			}
 
 		}
 	);
  
-	auto* TitleScreen = new BigNgine::Scene(
+	auto TitleScreen = new BigNgine::Scene(
 		[game](BigNgine::Scene* scene) -> void {
 			Logger::Log("Second scene Loading...");
-			auto* title = new BigNgine::Entity(
+			auto title = new BigNgine::Entity(
 				BigNgine::Vector2(-600.f, -400.f),
 				0.f,
 				BigNgine::Vector2(1200.f,800.f)
 			);
 			title->SetDepth(0.0f);
-			auto* renderer = new BigNgine::TextureRendererBehaviour();
+			auto renderer = new BigNgine::TextureRendererBehaviour();
 			renderer->SetFragShader(FileSystem::LoadFile("assets/shaders/frag/logo.glsl"));
 			renderer->SetVertShader(FileSystem::LoadFile("assets/shaders/vert/logo.glsl"));
 			renderer->AddTexture("./assets/img/logo.png");
@@ -184,7 +253,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 		}
 	);
 
-	auto* load = new BigNgine::Scene(
+	auto load = new BigNgine::Scene(
 		[](BigNgine::Scene* scene) -> void {
 			Logger::Log("First scene Loading...");
 			Logger::Success("first sceen loaded");

@@ -179,6 +179,7 @@ void BigNgine::TextRendererBehaviour::Update(int deltaTime)
 	int u_camera_zoom = glGetUniformLocation(program, "u_camera_zoom");
 	int u_color = glGetUniformLocation(program, "u_color");
 	int u_time = glGetUniformLocation(program, "u_time");
+	int u_rainbow = glGetUniformLocation(program, "u_rainbow");
 	
 	glUseProgram(program);
 	
@@ -192,6 +193,7 @@ void BigNgine::TextRendererBehaviour::Update(int deltaTime)
 	glUniform1f(u_camera_zoom, parent->GetParentScene()->CameraZoom);
 	glUniform3f(u_color,text_color.x , text_color.y, text_color.z);
 	glUniform1i(u_time, parent->GetParentScene()->GetActiveTime());
+	glUniform1i(u_rainbow, rainbow);
 	
 	
 	glActiveTexture(GL_TEXTURE0);

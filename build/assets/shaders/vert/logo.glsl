@@ -21,7 +21,7 @@ void main()
     mat4 translationMatrix = mat4(
     1.0, 0.0, 0.0, u_position.x,
     0.0, 1.0, 0.0, u_position.y,
-    0.0, 0.0, 1.0, u_depth,
+    0.0, 0.0, 1.0, -1.0,
     0.0, 0.0, 0.0, 1.0
     );
 
