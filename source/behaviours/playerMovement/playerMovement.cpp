@@ -18,6 +18,9 @@ Touhou::PlayerMovement::PlayerMovement(BigNgine::Entity* boundBox)
 void Touhou::PlayerMovement::Start()
 {
 	renderer = parent->GetBehaviour<BigNgine::TextureRendererBehaviour>();
+	if (renderer == nullptr) {
+		Logger::Error("PlayerMovement::Start: TextureRendererBehaviour is nullptr");
+	}
 	textures.push_back(new BigNgine::Texture("assets/img/Chimata_left.png"));
 	textures.push_back(new BigNgine::Texture("assets/img/Chimata_front.png"));
 	textures.push_back(new BigNgine::Texture("assets/img/Chimata_right.png"));
