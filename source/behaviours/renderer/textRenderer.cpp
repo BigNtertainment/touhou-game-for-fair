@@ -164,7 +164,6 @@ void BigNgine::TextRendererBehaviour::Start()
 	
 	glBindVertexArray(0);
 	
-	
 }
 
 void BigNgine::TextRendererBehaviour::Update(int deltaTime)

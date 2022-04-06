@@ -142,6 +142,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
  
 	auto* TitleScreen = new BigNgine::Scene(
 		[game](BigNgine::Scene* scene) -> void {
+			Logger::Log("Second scene Loading...");
 			auto* title = new BigNgine::Entity(
 				BigNgine::Vector2(-600.f, -400.f),
 				0.f,
@@ -155,9 +156,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			title->AddBehaviour(renderer);
 
 			scene->AddEntity(title);
-	
+			Logger::Success("second sceen loaded");
 		},
 		[game, MainMenu](BigNgine::Scene* scene, int deltaTime) -> void {
+			Logger::Log("Second scene running...");
 			if(scene->GetActiveTime() >= 3500 || Input::Get(BIGNGINE_KEY_SPACE)) {
 				game->SetActiveScene(MainMenu);
 			}
@@ -166,7 +168,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 	auto* load = new BigNgine::Scene(
 		[](BigNgine::Scene* scene) -> void {
-
+			Logger::Log("First scene Loading...");
+			Logger::Success("first sceen loaded");
 		},
 		[game, TitleScreen](BigNgine::Scene* scene, int deltaTime) -> void {
 			if(scene->GetActiveTime() >= 1000)

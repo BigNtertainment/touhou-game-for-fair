@@ -1,6 +1,6 @@
 #include "entity.h"
 
-BigNgine::Entity::Entity(const BigNgine::Vector2& _position, float _rotation, const BigNgine::Vector2& _size) : position(_position), rotation(_rotation), size(_size) {}
+BigNgine::Entity::Entity(const BigNgine::Vector2& _position, float _rotation, const BigNgine::Vector2& _size) : position(_position), rotation(_rotation), size(_size), behaviours() {}
 
 
 void BigNgine::Entity::SetDepth(float _depth)

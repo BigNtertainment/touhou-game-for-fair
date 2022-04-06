@@ -61,7 +61,7 @@ void BigNgine::Game::Start(BigNgine::Scene* firstScene, game_startfunc Start, ga
 	// with LESS depth-testing interprets a smaller depth value as meaning "closer"
 //	TODO(imustend): make it GL_GREATER
 //	 and write disclaimer
-	glDepthFunc(GL_NEVER);
+	glDepthFunc(GL_LESS);
 
 	glViewport(0, 0, width, height);
 
@@ -174,9 +174,9 @@ void BigNgine::Game::SetActiveScene(BigNgine::Scene* scene) {
 	if(activeScene != nullptr)
 		delete activeScene;
 
-	activeScene = scene;
+	scene->Start();
 
-	activeScene->Start();
+	activeScene = scene;
 }
 
 void BigNgine::Game::ResizeWindow(uint32_t width, uint32_t height)

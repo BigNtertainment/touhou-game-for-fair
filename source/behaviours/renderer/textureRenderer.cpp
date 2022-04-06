@@ -106,6 +106,7 @@ void BigNgine::TextureRendererBehaviour::Start()
 
 void BigNgine::TextureRendererBehaviour::Update(int deltaTime)
 {
+	
 	// TODO(imustend): make uniform a object, so user can add how many they want
 	//					vector of uniforms
 

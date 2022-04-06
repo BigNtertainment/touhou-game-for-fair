@@ -7,8 +7,8 @@
 namespace Touhou {
 	class Player : public BigNgine::Prefab {
 	public:
-		const BigNgine::Vector2 playerSize = BigNgine::Vector2(100.f, 100.f);
-		const std::string playerTexture = "./assets/img/mariss.png";
+		const BigNgine::Vector2 playerSize = BigNgine::Vector2(78.f, 88.f);
+		const std::string playerTexture = "";
 
 		BigNgine::Entity* Create(void** args) override;
 	};
