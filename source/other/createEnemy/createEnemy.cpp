@@ -7,12 +7,16 @@
 void Touhou::CreateSmallEnemy(
 	BigNgine::Scene *scene,
 	BigNgine::Entity *gameArea,
-	Touhou::EnemyMovementBehaviour::MovementFunction movementFunction
+	BigNgine::Entity *player,
+	Touhou::EnemyMovementBehaviour::MovementFunction movementFunction,
+	std::vector<uint16_t> shotIntervals
 ) {
 	auto enemyPrefab = EnemySmall();
 
 	void* args[] = {
-		gameArea
+		gameArea,
+		player,
+		(void*)&shotIntervals
 	};
 
 	scene->AddPrefab(

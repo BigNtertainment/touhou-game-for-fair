@@ -6,8 +6,8 @@ namespace Touhou {
 		/// @brief Creates a new small enemy collider.
 		/// @param void** args Arguments:
 		/// - model (BigNgine::Entity*)
+		/// - player (BigNgine::Entity*)
 		/// - movement angle (float)
-		/// - movement speed (float)
 		BigNgine::Entity* Create(void** args) override;
 	};
 }

@@ -23,7 +23,7 @@ void BigNgine::Scene::AddEntity(Entity *entity)
 		entity->Start();
 }
 
-void BigNgine::Scene::AddPrefab(Prefab& prefab, void* args[], std::function<void(Entity* creation)> callback) {
+BigNgine::Entity* BigNgine::Scene::AddPrefab(Prefab& prefab, void* args[], std::function<void(Entity* creation)> callback) {
 	// Create the entity from the prefab
 	Entity* entity = prefab.Create(args);
 
@@ -32,6 +32,8 @@ void BigNgine::Scene::AddPrefab(Prefab& prefab, void* args[], std::function<void
 
 	// If a callback was provided, call it
 	callback(entity);
+
+	return entity;
 }
 
 void BigNgine::Scene::AddCallback(Input::Callback *callback)

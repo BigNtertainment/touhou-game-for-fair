@@ -59,8 +59,6 @@ void BigNgine::Game::Start(BigNgine::Scene* firstScene, game_startfunc Start, ga
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 	
 	// with LESS depth-testing interprets a smaller depth value as meaning "closer"
-//	TODO(imustend): make it GL_GREATER
-//	 and write disclaimer
 	glDepthFunc(GL_LESS);
 
 	glViewport(0, 0, width, height);
@@ -73,10 +71,6 @@ void BigNgine::Game::Start(BigNgine::Scene* firstScene, game_startfunc Start, ga
 
 	// Activate callbacks on key events
 	glfwSetKeyCallback(window, ExecuteCallbacks);
-
-	//	FIXME: if you add entity while game loop is running start functions wont execute!!!
-	//		or you change scene more then once or something it doesnt work
-	//		THE GAME CRASHES
 
 	// For calculating deltaTime
 	clock_t lastTime = 0, currentTime;

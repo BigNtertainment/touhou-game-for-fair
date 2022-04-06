@@ -26,7 +26,7 @@ BigNgine::Entity* Touhou::EnemyBullet::Create(void** args) {
 
 	bullet->AddBehaviour(renderer);
 
-	auto* bulletDestruction = new BulletDestructionBehaviour((BigNgine::Entity*)args[3]);
+	auto* bulletDestruction = new BulletDestructionBehaviour((BigNgine::Entity*)args[2]);
 
 	bulletDestruction->name = "enemyBullet_destruction";
 

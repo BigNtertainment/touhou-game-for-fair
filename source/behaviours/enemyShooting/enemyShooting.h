@@ -1,5 +1,5 @@
 #include "types/behaviour/behaviour.h"
-
+#include "types/entity/entity.h"
 #include "types/prefab/prefab.h"
 
 #include <stdint.h>
@@ -7,15 +7,17 @@
 
 namespace Touhou {
 	class EnemyShootingBehaviour : BigNgine::Behaviour {
-		BigNgine::Prefab* bulletPrefab;
-		std::vector<uint16_t> intervals;
-		uint32_t timer;
-		uint16_t intervalIndex;
+		BigNgine::Entity* gameArea;
+		BigNgine::Entity* player;
+		std::vector<uint16_t> shotIntervals;
+		uint32_t timer = 0;
+		uint16_t intervalIndex = 0;
 	public:
-		EnemyShootingBehaviour(std::vector<uint16_t> intervals, BigNgine::Prefab* bulletPrefab);
+		static const BigNgine::Vector2 bulletSize;
+
+		EnemyShootingBehaviour(BigNgine::Entity* gameArea, BigNgine::Entity* player, std::vector<uint16_t> shotIntervals);
 
 		void Update(int deltaTime) override;
-		void Destroy() override;
 
 		void Shoot();
 	};

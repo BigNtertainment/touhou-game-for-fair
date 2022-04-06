@@ -4,22 +4,22 @@
 #include "prefabs/playerCollider/playerCollider.h"
 #include "behaviours/follow/follow.h"
 
-void Touhou::CreatePlayer(BigNgine::Scene* scene, BigNgine::Entity* gameArea) {
+BigNgine::Entity* Touhou::CreatePlayer(BigNgine::Scene* scene, BigNgine::Entity* gameArea) {
 	auto playerPrefab = Touhou::Player();
 
 	void* playerArgs[] = {
 		gameArea
 	};
 
-	scene->AddPrefab(playerPrefab, playerArgs, [scene, gameArea](BigNgine::Entity* player) {
-		auto playerColliderPrefab = Touhou::PlayerCollider();
+	auto* player = scene->AddPrefab(playerPrefab, playerArgs);
 
-		void* playerColliderArgs[] = {
-			gameArea
-		};
+	auto playerColliderPrefab = Touhou::PlayerCollider();
 
-		scene->AddPrefab(playerColliderPrefab, playerColliderArgs, [player](BigNgine::Entity* playerCollider) {
-			playerCollider->AddBehaviour(new BigNgine::FollowBehaviour(player, player->size / 2.f - playerCollider->size / 2.f));
-		});
+	void* playerColliderArgs[] = {
+		gameArea
+	};
+
+	return scene->AddPrefab(playerColliderPrefab, playerColliderArgs, [player](BigNgine::Entity* playerCollider) {
+		playerCollider->AddBehaviour(new BigNgine::FollowBehaviour(player, player->size / 2.f - playerCollider->size / 2.f));
 	});
 }

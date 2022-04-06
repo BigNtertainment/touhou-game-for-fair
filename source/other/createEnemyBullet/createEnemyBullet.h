@@ -9,9 +9,9 @@ namespace Touhou {
 	void CreateEnemyBullet(
 		BigNgine::Scene* scene,
 		BigNgine::Entity* gameArea,
+		BigNgine::Entity* player,
 		BigNgine::Vector2 position,
 		BigNgine::Vector2 size,
-		float bulletDirection = -90.f,
-		float bulletSpeed = 600.f
+		float bulletDirection = 90.f
 	);
 }

@@ -29,12 +29,6 @@ BigNgine::Entity* Touhou::EnemySmallCollider::Create(void** args) {
 
     enemyCollider->AddBehaviour(new EnemyBehaviour(model));
 
-	BigNgine::TextureRendererBehaviour* debugRenderer = new BigNgine::TextureRendererBehaviour();
-
-	debugRenderer->AddTexture("./assets/img/mariss.png");
-
-	enemyCollider->AddBehaviour(debugRenderer);
-
 	// To destroy the enemy when it leaves the game area
 	// We should probably change the name of this behaviour
 	model->AddBehaviour(new BulletDestructionBehaviour(gameArea));

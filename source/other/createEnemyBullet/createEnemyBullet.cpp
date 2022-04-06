@@ -6,10 +6,10 @@
 void Touhou::CreateEnemyBullet(
 	BigNgine::Scene *scene,
 	BigNgine::Entity *gameArea,
+	BigNgine::Entity *player,
 	BigNgine::Vector2 position,
 	BigNgine::Vector2 size,
-	float bulletDirection,
-	float bulletSpeed
+	float bulletDirection
 ) {
 	auto enemyBulletPrefab = EnemyBullet();
 
@@ -22,13 +22,13 @@ void Touhou::CreateEnemyBullet(
 	scene->AddPrefab(
 		enemyBulletPrefab,
 		args,
-		[scene, bulletDirection, bulletSpeed] (BigNgine::Entity* model) {
+		[scene, bulletDirection, player] (BigNgine::Entity* model) {
 			auto enemyBulletColliderPrefab = EnemyBulletCollider();
 
 			void* args[] = {
 				model,
-				(void*)&bulletDirection,
-				(void*)&bulletSpeed
+				player,
+				(void*)&bulletDirection
 			};
 
 			scene->AddPrefab(enemyBulletColliderPrefab, args);
