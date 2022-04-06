@@ -16,7 +16,7 @@ BigNgine::Entity* Touhou::Player::Create(void** args) {
 		playerSize
 	);
 // TODO(tymon): wtf???
-	player->SetDepth(1.f);
+	player->SetDepth(0.f);
 
 	player->tag = "Player";
 

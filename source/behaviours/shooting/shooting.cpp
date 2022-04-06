@@ -1,25 +1,26 @@
 #include "shooting.h"
 
+#include "other/createPlayerBullet/createPlayerBullet.h"
+
 Touhou::ShootingBehaviour::ShootingBehaviour(BigNgine::Entity* boundBox) :
 	boundBox(boundBox) {}
 
 void Touhou::ShootingBehaviour::Update(int deltaTime) {
 	if(cooldownTimer > 0.f)
-	cooldownTimer -= deltaTime / 1000.f;
+		cooldownTimer -= deltaTime / 1000.f;
 
 	if(Input::Get(BIGNGINE_KEY_Z) && cooldownTimer <= 0.f) {
-		auto bulletPrefab = PlayerBullet();
-
-		BigNgine::Vector2 bulletPosition = parent->position + parent->size / 2.f - PlayerBullet::bulletSize / 2.f;
-
-		void* args[] = {
-			(void*)&bulletPosition,
-			(void*)&bulletDirection,
-			(void*)&bulletSpeed,    
-			(void*)boundBox
-		};
-
-		parent->GetParentScene()->AddPrefab(bulletPrefab, args);
+		CreatePlayerBullet(
+			parent->GetParentScene(),
+			boundBox,
+			parent->position
+				+ BigNgine::Vector2(
+					parent->size.x / 2.f - PlayerBullet::bulletSize.x / 4.f,
+					-PlayerBullet::bulletSize.y
+				),
+			-90.f,
+			600.f
+		);
 
 		cooldownTimer = cooldown;
 	}

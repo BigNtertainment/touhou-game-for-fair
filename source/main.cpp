@@ -56,7 +56,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				Touhou::ComeAndGo(
 					BigNgine::Vector2(0.3f, 0.3f),
 					0.2f,
-					2.f
+					5.f
 				)
 			);
 		},
