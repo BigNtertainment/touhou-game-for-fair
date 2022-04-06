@@ -42,12 +42,21 @@ void Touhou::CircleColliderBehaviour::Update(int deltaTime)
 
 		if(collider->active && this->IsColliding(collider))
 		{
-			collider->callback(this);
-			this->callback(collider);
-		}
+			if(
+				collider == nullptr ||
+				collider->parent == nullptr ||
+				this->parent == nullptr
+			) {
+				Logger::Error("shit nullptr");
+				continue;
+			}
 
-		if(this == nullptr)
-			break;
+			if(collider->callback != nullptr)
+				collider->callback(this);
+
+			if(this->callback != nullptr)
+				this->callback(collider);
+		}
 
 		if(collider == nullptr)
 		{
@@ -65,12 +74,23 @@ void Touhou::CircleColliderBehaviour::Destroy()
 
 bool Touhou::CircleColliderBehaviour::IsColliding(Touhou::CircleColliderBehaviour* collider) const
 {
-// 	getting distance between center of this collider and passed one
-// 	im not getting square root of it because its slow
+	// getting distance between center of this collider and passed one
+	// im not getting square root of it because its slow
+	if(collider->parent == nullptr) {
+		Logger::Error("collider has nullptr parent");
+		return false;
+	}
+
+	if(this->parent == nullptr) {
+		Logger::Error("what");
+		return false;
+	}
+
 	double distance_between_circles_squared = 
 		pow((this->parent->position.x - collider->parent->position.x), 2)
 		+ pow((this->parent->position.y - collider->parent->position.y), 2);
-// 	checking if distance between centers squared is less then sum of radii squared
+
+	// checking if distance between centers squared is less then sum of radii squared
 	return distance_between_circles_squared < pow((this->parent->size.x + collider->parent->size.x), 2);
 }
 
