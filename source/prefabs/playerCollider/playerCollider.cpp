@@ -12,6 +12,8 @@ BigNgine::Entity* Touhou::PlayerCollider::Create(void** args) {
 	);
 	playerCollider->SetDepth(0.f);
 
+	playerCollider->tag = "PlayerCollider";
+
 	auto* playerColliderBehaviour = new Touhou::CircleColliderBehaviour();
 
 	playerCollider->AddBehaviour(playerColliderBehaviour);

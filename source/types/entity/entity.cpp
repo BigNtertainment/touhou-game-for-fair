@@ -29,12 +29,12 @@ void BigNgine::Entity::Update(int deltaTime) {
 	uint32_t size = behaviours.size();
 
 	for(int i = 0; i < size; i++) {
-		if(behaviours[i]->active) {
-			if(behaviours[i] == nullptr) {
-				Logger::Error("Behaviour is nullptr");
-				continue;
-			}
+		if(behaviours[i] == nullptr) {
+			Logger::Error("Updated behaviour is nullptr");
+			continue;
+		}
 
+		if(behaviours[i]->active) {
 			behaviours[i]->Update(deltaTime);
 
 			if(this == nullptr)

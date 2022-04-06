@@ -36,6 +36,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			gameArea->SetDepth(.2f);
 
+			gameArea->tag = "GameArea";
+
 			auto* gameAreaRenderer = new BigNgine::ShaderRendererBehaviour();
 
 			gameAreaRenderer->SetFragShader(FileSystem::LoadFile("assets/shaders/frag/sky.glsl"));
@@ -48,32 +50,16 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			Touhou::CreatePlayer(scene, gameArea);
 
 			// DUMMY ENEMY
-
-			// dummyRenderer->name = "dummy_renderer";
-
-			// dummyRenderer->AddTexture("./assets/img/mariss.png");
-
-			// dummy->AddBehaviour((BigNgine::Behaviour*)dummyRenderer);
-			// dummy->AddBehaviour((BigNgine::Behaviour*)new Touhou::EnemyBehaviour());
-			// dummy->AddBehaviour((BigNgine::Behaviour*)new Touhou::CircleColliderBehaviour());
-			// dummy->AddBehaviour(
-			// 	(BigNgine::Behaviour*)new Touhou::EnemyMovementBehaviour(
-			// 		gameArea,
-			// 		[](int time) -> BigNgine::Vector2 {
-			// 			float frame = time / 12000.f;
-						
-			// 			if(frame < 0.5f)
-			// 				return BigNgine::Vector2(0.5f, frame);
-						
-			// 			if(frame < 1.f)
-			// 				return BigNgine::Vector2(0.5f, 0.5f);
-						
-			// 			return BigNgine::Vector2(1.5f - frame, 0.5f);
-			// 		}
-			// 	)
-			// );
-
-			// scene->AddEntity(dummy);
+			Touhou::CreateSmallEnemy(
+				scene,
+				gameArea,
+				Touhou::ComeAndGo(
+					gameArea,
+					BigNgine::Vector2(0.3f, 0.3f),
+					0.2f,
+					2.f
+				)
+			);
 		},
 		[](BigNgine::Scene* scene, int deltaTime) -> void {
 			

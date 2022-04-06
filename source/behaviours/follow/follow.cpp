@@ -13,6 +13,12 @@ BigNgine::FollowBehaviour::FollowBehaviour(Entity* _followed, const Vector2& _pi
 }
 
 void BigNgine::FollowBehaviour::Update(int deltaTime) {
+	if(followed == nullptr) {
+		Logger::Error("following nullptr");
+		parent->GetParentScene()->RemoveEntity(parent);
+		return;
+	}
+
 	if(lockRotation) {
 		parent->position = followed->position + pivot;
 		return;

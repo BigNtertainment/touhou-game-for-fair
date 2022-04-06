@@ -2,11 +2,19 @@
 
 #include "types/scene/scene.h"
 #include "types/entity/entity.h"
-#include "types/vector2/vector2.h"
-#include "behaviours/renderer/renderer.h"
-#include "behaviours/enemy/enemy.h"
-#include "behaviours/circleCollider/circleCollider.h"
+#include "behaviours/enemyMovement/enemyMovement.h"
 
 namespace Touhou {
-	void CreateEnemy(BigNgine::Scene*, BigNgine::Entity* gameArea, BigNgine::Vector2 position);
+	void CreateSmallEnemy(
+		BigNgine::Scene* scene,
+		BigNgine::Entity* gameArea,
+		Touhou::EnemyMovementBehaviour::MovementFunction movementFunction
+	);
+
+	Touhou::EnemyMovementBehaviour::MovementFunction ComeAndGo(
+		BigNgine::Entity* gameArea,
+		BigNgine::Vector2 target,
+		float speed,
+		float waitTime
+	);
 }
