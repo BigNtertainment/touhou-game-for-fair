@@ -178,6 +178,7 @@ void BigNgine::TextRendererBehaviour::Update(int deltaTime)
 	int u_camera_position = glGetUniformLocation(program, "u_camera_position");
 	int u_camera_zoom = glGetUniformLocation(program, "u_camera_zoom");
 	int u_color = glGetUniformLocation(program, "u_color");
+	int u_time = glGetUniformLocation(program, "u_time");
 	
 	glUseProgram(program);
 	
@@ -190,6 +191,7 @@ void BigNgine::TextRendererBehaviour::Update(int deltaTime)
 				parent->GetParentScene()->Camera->position.y);
 	glUniform1f(u_camera_zoom, parent->GetParentScene()->CameraZoom);
 	glUniform3f(u_color,text_color.x , text_color.y, text_color.z);
+	glUniform1i(u_time, parent->GetParentScene()->GetActiveTime());
 	
 	
 	glActiveTexture(GL_TEXTURE0);
@@ -269,5 +271,10 @@ void BigNgine::TextRendererBehaviour::SetFont(const std::string &font)
 void BigNgine::TextRendererBehaviour::SetColor(Vector3 color)
 {
 	text_color = color;
+}
+
+void BigNgine::TextRendererBehaviour::SetFragShader(const std::string &&fragmentShader)
+{
+	fragShader = fragmentShader;
 }
 

@@ -92,7 +92,7 @@ void main() {
 //    ((sp.x/ u_size.x) - 1/(u_size.x / u_position.x)) / 4.,
 //    (sp.y/ u_size.y) - ((u_resolution.y / u_size.y) - 1. - (u_position.y / u_size.y))
 //    );
-    vec2 st = sp.xy/u_resolution;
+    vec2 st = sp/u_resolution;
 
     //  THE PART THAT REALLY MATTERS
     float clouds = .8;

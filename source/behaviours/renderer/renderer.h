@@ -73,7 +73,7 @@ namespace BigNgine
 		///Set fragment shader
 		///@param fragmentShader code in string
 		///@default Default set to standard BigNgine fragment texture shader
-		void SetFragShader(std::string fragmentShader);
+		void SetFragShader(const std::string &&fragmentShader);
 
 ///		Set texture
 ///		@param _file Path to your file of choice(should be picture)
@@ -138,6 +138,8 @@ namespace BigNgine
 		///@note All font files should be in /assets/fonts/
 		///@default Default set to Jetbrains Mono font in /assets/fonts/ folder
 		void SetFont(const std::string &font);
+
+		void SetFragShader(const std::string &&fragmentShader);
 
 		void SetColor(Vector3 color);
 	

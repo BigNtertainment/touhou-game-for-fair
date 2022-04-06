@@ -39,7 +39,7 @@ namespace BigNgine {
 		b2Vec2* gravity;
 		b2World* world;
 
-		Scene(SceneStartFunction Start, SceneUpdateFunction Update);
+		Scene(const SceneStartFunction &Start, const SceneUpdateFunction &Update);
 
 		///	Adds entity to Scene
 		///	@param entity BigNgine::Entity entity to be added to scene

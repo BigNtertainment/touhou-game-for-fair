@@ -165,9 +165,9 @@ void BigNgine::TextureRendererBehaviour::Destroy()
 	vertShader = std::move(vertexShader);
 }
 
-[[maybe_unused]]void BigNgine::TextureRendererBehaviour::SetFragShader(std::string fragmentShader)
+[[maybe_unused]]void BigNgine::TextureRendererBehaviour::SetFragShader(const std::string &&fragmentShader)
 {
-	fragShader = std::move(fragmentShader);
+	fragShader = fragmentShader;
 }
 
 [[maybe_unused]]void BigNgine::TextureRendererBehaviour::SetTexture(Texture *_texture)

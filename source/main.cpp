@@ -38,7 +38,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			gameArea->tag = "GameArea";
 
-			auto* gameAreaRenderer = new BigNgine::ShaderRendererBehaviour();
+			auto gameAreaRenderer = new BigNgine::ShaderRendererBehaviour();
 
 			gameAreaRenderer->SetFragShader(FileSystem::LoadFile("assets/shaders/frag/sky.glsl"));
 
@@ -61,7 +61,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				)
 			);
 		},
-		[](BigNgine::Scene* scene, int deltaTime) -> void {
+		[](BigNgine::Scene*, int) -> void {
 			
 		}
 	);
@@ -79,9 +79,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			auto* titleRenderer = new BigNgine::TextRendererBehaviour();
 			title->AddBehaviour((BigNgine::Behaviour*)titleRenderer);
-			titleRenderer->SetFontSize(24);
+			titleRenderer->SetFragShader(FileSystem::LoadFile("assets/shaders/frag/MenuText.glsl"));
+			titleRenderer->SetFont("assets/fonts/RubikMoonrocks-Regular.ttf");
+			titleRenderer->SetFontSize(46);
 			titleRenderer->SetMarginBottom(12);
-			titleRenderer->SetText("Touhou\nThe Kerfuffle\nof\nThe Lackadaisical\nRagamuffin");
+			titleRenderer->SetText("Touhou");
 			scene->AddEntity(title);
 
 			// MENU
@@ -93,6 +95,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			menuRenderer = new BigNgine::TextRendererBehaviour();
 			menu->AddBehaviour((BigNgine::Behaviour*)menuRenderer);
+			menuRenderer->SetFragShader(FileSystem::LoadFile("assets/shaders/frag/MenuText.glsl"));
+			menuRenderer->SetFont("assets/fonts/RubikMoonrocks-Regular.ttf");
 			menuRenderer->SetFontSize(24);
 			menuRenderer->SetMarginBottom(72);
 			menuRenderer->SetText(" Start\n Exit");
@@ -130,6 +134,20 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			chimataRenderer->AddTexture("./assets/img/chimata_main_menu.png");
 			scene->AddEntity(chimata);
 
+
+
+			auto discleaimer = new BigNgine::Entity(
+				BigNgine::Vector2(5.f, 781.f),
+				0.f,
+				BigNgine::Vector2(0.f, 0.f)
+			);
+			title->SetDepth(0.0f);
+
+			auto discleaimerRenderer = new BigNgine::TextRendererBehaviour();
+			discleaimer->AddBehaviour((BigNgine::Behaviour*)discleaimerRenderer);
+			discleaimerRenderer->SetText("This game is based off of Touhou Project by Team Shanghai Alice.");
+			scene->AddEntity(discleaimer);
+
 		},
 		[game, gameScene, &option, &menuRenderer](BigNgine::Scene* scene, int deltaTime) -> void {
 			if(option == 0)
@@ -154,8 +172,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			renderer->SetVertShader(FileSystem::LoadFile("assets/shaders/vert/logo.glsl"));
 			renderer->AddTexture("./assets/img/logo.png");
 			title->AddBehaviour(renderer);
-
 			scene->AddEntity(title);
+
 			Logger::Success("second sceen loaded");
 		},
 		[game, MainMenu](BigNgine::Scene* scene, int deltaTime) -> void {
