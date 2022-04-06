@@ -54,7 +54,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				scene,
 				gameArea,
 				Touhou::ComeAndGo(
-					gameArea,
 					BigNgine::Vector2(0.3f, 0.3f),
 					0.2f,
 					2.f

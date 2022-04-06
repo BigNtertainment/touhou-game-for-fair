@@ -12,7 +12,6 @@ namespace Touhou {
 	);
 
 	Touhou::EnemyMovementBehaviour::MovementFunction ComeAndGo(
-		BigNgine::Entity* gameArea,
 		BigNgine::Vector2 target,
 		float speed,
 		float waitTime
