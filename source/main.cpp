@@ -26,12 +26,13 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	auto game = BigNgine::Game::GetInstance();
 
 	auto ScoreRenderer = new BigNgine::TextRendererBehaviour();
+	auto hitBoxRenderer = new BigNgine::TextureRendererBehaviour();
 
 	BigNgine::Entity* gameArea = nullptr;
 	BigNgine::Entity* player = nullptr;
 
 	auto gameScene = new BigNgine::Scene(
-		[game, &ScoreRenderer, &gameArea, &player](BigNgine::Scene* scene) -> void {
+		[game, &ScoreRenderer, &gameArea, &player, &hitBoxRenderer](BigNgine::Scene* scene) -> void {
 			Logger::Log("Starting game");
 
 			Touhou::GameStatus::running = true;
@@ -88,8 +89,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			);
 
 			playerHitbox->AddBehaviour(new BigNgine::FollowBehaviour(player));
-
-			auto hitBoxRenderer = new BigNgine::TextureRendererBehaviour();
 
 			hitBoxRenderer->AddTexture("assets/icon/icon.png");
 
@@ -165,6 +164,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 		},
 		[&ScoreRenderer](BigNgine::Scene*, int deltaTime) -> void {
 			ScoreRenderer->SetText("Score: " + std::to_string(Touhou::Score::points));
+			hitBoxRenderer->SetActive(Input::Get(BIGNGINE_KEY_LEFT_SHIFT));
 
 			if(Touhou::GameStatus::running)
 				Touhou::EnemyWave::Update(deltaTime);
