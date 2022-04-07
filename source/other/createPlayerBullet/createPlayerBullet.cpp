@@ -17,7 +17,7 @@ void Touhou::CreatePlayerBullet(
 		gameArea
 	};
 
-	scene->AddPrefab(
+	scene->AddPrefabToFront(
 		playerBulletPrefab,
 		args, 
 		[scene, bulletDirection, bulletSpeed] (BigNgine::Entity* model) {
@@ -29,7 +29,7 @@ void Touhou::CreatePlayerBullet(
 				(void*)&bulletSpeed
 			};
 
-			scene->AddPrefab(playerBulletColliderPrefab, args);
+			scene->AddPrefabToFront(playerBulletColliderPrefab, args);
 		}
 	);
 }

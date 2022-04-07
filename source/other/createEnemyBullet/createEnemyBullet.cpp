@@ -19,7 +19,7 @@ void Touhou::CreateEnemyBullet(
 		gameArea
 	};
 
-	scene->AddPrefab(
+	scene->AddPrefabToFront(
 		enemyBulletPrefab,
 		args,
 		[scene, bulletDirection, player] (BigNgine::Entity* model) {
@@ -31,7 +31,7 @@ void Touhou::CreateEnemyBullet(
 				(void*)&bulletDirection
 			};
 
-			scene->AddPrefab(enemyBulletColliderPrefab, args);
+			scene->AddPrefabToFront(enemyBulletColliderPrefab, args);
 		}
 	);
 }

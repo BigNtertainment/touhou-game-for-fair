@@ -57,6 +57,17 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			// PLAYER
 			BigNgine::Entity* player = Touhou::CreatePlayer(scene, gameArea);
 
+			BigNgine::Entity* playerHitbox = new BigNgine::Entity(
+				player->position,
+				0.f,
+				player->size
+			);
+			playerHitbox->AddBehaviour(new BigNgine::FollowBehaviour(player));
+			auto hitBoxRenderer = new BigNgine::TextureRendererBehaviour();
+			hitBoxRenderer->AddTexture("assets/icon/icon.png");
+			playerHitbox->AddBehaviour((BigNgine::Behaviour*)hitBoxRenderer);
+			scene->AddEntity(playerHitbox);
+
 
 			// DUMMY ENEMY
 			Touhou::CreateSmallEnemy(
@@ -69,7 +80,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 					5.f
 				),
 				{
-					2, 1, 1
+					1, 1, 1, 1, 1, 1, 1, 1, 1
 				}
 			);
 
