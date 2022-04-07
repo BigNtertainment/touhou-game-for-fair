@@ -17,6 +17,10 @@ BigNgine::Entity* Touhou::PlayerBulletCollider::Create(void** args) {
 		)
 	);
 
+	playerBulletCollider->SetDepth(0.f);
+
+	playerBulletCollider->tag = "PlayerBulletCollider";
+
 	playerBulletCollider->AddBehaviour(new BulletBehaviour(BigNgine::Vector2(0.0f, 0.0f)));
 	playerBulletCollider->AddBehaviour(new MoveOnLineBehaviour(*(float*)args[1], *(float*)args[2]));
 
@@ -36,8 +40,8 @@ BigNgine::Entity* Touhou::PlayerBulletCollider::Create(void** args) {
 
 		enemy->Damage();
 
-		playerBulletCollider->GetParentScene()->RemoveEntity(model);
-		playerBulletCollider->GetParentScene()->RemoveEntity(playerBulletCollider);
+		delete model;
+		delete playerBulletCollider;
 	});
 
 	playerBulletCollider->AddBehaviour(collider);

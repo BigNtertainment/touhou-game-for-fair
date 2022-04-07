@@ -19,6 +19,6 @@ void Touhou::BulletDestructionBehaviour::Update(int) {
 			delete followBehaviour->followed;
 		}
 
-		parent->GetParentScene()->RemoveEntity(parent);
+		delete parent;
 	}
 }

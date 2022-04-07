@@ -17,8 +17,8 @@ void Touhou::EnemyBehaviour::Die() {
 	Score::points += 500;
 
 	// Delete the model
-	parent->GetParentScene()->RemoveEntity(model);
+	delete model;
 
 	// It also deletes the behaviours
-	parent->GetParentScene()->RemoveEntity(parent);
+	delete parent;
 }

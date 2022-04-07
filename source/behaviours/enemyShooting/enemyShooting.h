@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace Touhou {
-	class EnemyShootingBehaviour : BigNgine::Behaviour {
+	class EnemyShootingBehaviour : public BigNgine::Behaviour {
 		BigNgine::Entity* gameArea;
 		BigNgine::Entity* player;
 		std::vector<uint16_t> shotIntervals;

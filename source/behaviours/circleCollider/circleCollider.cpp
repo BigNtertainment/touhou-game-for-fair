@@ -18,7 +18,7 @@ void Touhou::CircleColliderBehaviour::Start()
 
 void Touhou::CircleColliderBehaviour::Update(int deltaTime)
 {
-	bool encounteredThis = false;
+	// bool encounteredThis = false;
 
 	uint32_t size = colliders.size();
 
@@ -28,7 +28,7 @@ void Touhou::CircleColliderBehaviour::Update(int deltaTime)
 
 		if(collider == this)
 		{
-			encounteredThis = true;
+			// encounteredThis = true;
 			continue;
 		}
 
@@ -39,8 +39,8 @@ void Touhou::CircleColliderBehaviour::Update(int deltaTime)
 			continue;
 		}
 
-		if(!encounteredThis)
-			continue;
+		// if(!encounteredThis)
+		// 	continue;
 
 		if(collider->active && this->IsColliding(collider))
 		{
@@ -53,16 +53,22 @@ void Touhou::CircleColliderBehaviour::Update(int deltaTime)
 				continue;
 			}
 
-			if(collider->callback != nullptr)
-				collider->callback(this);
+			if(callback != nullptr)
+				callback(collider);
 
-			if(this->callback != nullptr)
-				this->callback(collider);
+			// if(std::count(colliders.begin(), colliders.end(), collider))
+			// 	if(this->callback != nullptr)
+			// 		this->callback(collider);
+
+			// break;
+
+			continue;
 		}
 
 		if(collider == nullptr)
 		{
 			i--;
+			colliders.erase(std::remove(colliders.begin(), colliders.end(), collider), colliders.end());
 		}
 
 		size = colliders.size();
@@ -71,16 +77,21 @@ void Touhou::CircleColliderBehaviour::Update(int deltaTime)
 
 void Touhou::CircleColliderBehaviour::Destroy()
 {
+	active = false;
+
 	colliders.erase(std::remove(colliders.begin(), colliders.end(), this), colliders.end());
 }
 
 bool Touhou::CircleColliderBehaviour::IsColliding(Touhou::CircleColliderBehaviour* collider) const
 {
+	if(!active || !collider->active)
+		return false;
+
 	// getting distance between center of this collider and passed one
 	// im not getting square root of it because its slow
 	if(collider->parent == nullptr) {
 		Logger::Error("collider has nullptr parent");
-		delete this;
+		colliders.erase(std::remove(colliders.begin(), colliders.end(), collider), colliders.end());
 		return false;
 	}
 

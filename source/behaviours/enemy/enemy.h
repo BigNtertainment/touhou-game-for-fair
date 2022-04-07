@@ -5,7 +5,7 @@
 
 namespace Touhou {
 	class EnemyBehaviour : public BigNgine::Behaviour {
-		int health = 1;
+		int health = 3;
 
 		BigNgine::Entity* model;
 	public:

@@ -44,15 +44,6 @@ BigNgine::Entity* Touhou::EnemyBulletCollider::Create(void **args) {
 
 		GameStatus::Lose();
 
-		// Touhou::EnemyBehaviour* enemy = other->GetParent()->GetBehaviour<Touhou::EnemyBehaviour>();
-
-		// if(enemy == nullptr) {
-		// 	Logger::Error("EnemyBehaviour not found on an entity tagged as \"Enemy\".");
-		// 	return;
-		// }
-
-		// enemy->Damage();
-
 		collider->GetParent()->SetActive(false);
 		model->SetActive(false);
 		other->GetParent()->SetActive(false);
