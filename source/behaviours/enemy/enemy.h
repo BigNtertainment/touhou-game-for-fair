@@ -1,6 +1,7 @@
 #pragma once
 
 #include "types/behaviour/behaviour.h"
+#include "other/score/score.h"
 
 namespace Touhou {
 	class EnemyBehaviour : public BigNgine::Behaviour {

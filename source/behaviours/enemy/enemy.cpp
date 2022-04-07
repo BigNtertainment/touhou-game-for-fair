@@ -13,6 +13,9 @@ void Touhou::EnemyBehaviour::Damage() {
 void Touhou::EnemyBehaviour::Die() {
 	Logger::Log("Enemy died");
 
+	// add points to score
+	Score::points += 500;
+
 	// Delete the model
 	parent->GetParentScene()->RemoveEntity(model);
 

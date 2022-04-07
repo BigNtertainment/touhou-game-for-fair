@@ -34,6 +34,30 @@ void BigNgine::Scene::AddPrefab(Prefab& prefab, void* args[], std::function<void
 	callback(entity);
 }
 
+void BigNgine::Scene::AddEntityToFront(Entity *entity)
+{
+	// Set the entity parent scene
+	entity->parentScene = this;
+	
+	// Add the entity to the scene entities vector
+	entities.insert(entities.begin() + 2, entity);
+	
+	// If this scene is currently running, call the entity start method
+	if (Game::GetInstance()->GetActiveScene() == this)
+		entity->Start();
+}
+
+void BigNgine::Scene::AddPrefabToFront(Prefab& prefab, void* args[], std::function<void(Entity* creation)> callback) {
+	// Create the entity from the prefab
+	Entity* entity = prefab.Create(args);
+
+	// Add the entity to the scene
+	AddEntityToFront(entity);
+
+	// If a callback was provided, call it
+	callback(entity);
+}
+
 void BigNgine::Scene::AddCallback(Input::Callback *callback)
 {
 	callbacks.push_back(callback);
@@ -109,7 +133,7 @@ void BigNgine::Scene::Update(int deltaTime)
 
 
 		if(entity == nullptr) {
-			i--;
+			i --;
 		}
 
 		// Update size in case the Update function changed it

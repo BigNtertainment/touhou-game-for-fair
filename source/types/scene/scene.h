@@ -50,6 +50,10 @@ namespace BigNgine {
 		/// @param args arguments to be passed to prefab
 		void AddPrefab(Prefab& prefab, void* args[] = {}, std::function<void(Entity* creation)> callback = [] (Entity*) {});
 
+		void AddEntityToFront(Entity* entity);
+
+		void AddPrefabToFront(Prefab& prefab, void* args[] = {}, std::function<void(Entity* creation)> callback = [] (Entity*) {});
+
 		///	Adds callback to Scene
 		///	@param callback Input::Callback callback to be added to scene
 		void AddCallback(Input::Callback* callback);

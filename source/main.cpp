@@ -5,6 +5,7 @@
 #include "behaviours/circleCollider/circleCollider.h"
 #include "other/createPlayer/createPlayer.h"
 #include "other/createEnemy/createEnemy.h"
+#include "other/score/score.h"
 #include "behaviours/targetPlayer/targetPlayer.h"
 #include "behaviours/shooting/shooting.h"
 #include "behaviours/enemyMovement/enemyMovement.h"
@@ -21,8 +22,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 {
 	auto game = BigNgine::Game::GetInstance();
 
+	auto ScoreRenderer = new BigNgine::TextRendererBehaviour();
 	auto gameScene = new BigNgine::Scene(
-		[game](BigNgine::Scene* scene) -> void {
+		[game, &ScoreRenderer](BigNgine::Scene* scene) -> void {
 			// GAME AREA
 			const float gameAreaVerticalMargin = 20.f;
 			const float gameAreaHorizontalMargin = 50.f;
@@ -46,8 +48,14 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			scene->AddEntity(gameArea);
 
+			// this prevents player from stuttering 
+			// i hate this 
+			auto empty = new BigNgine::Entity();
+			scene->AddEntity(empty);
+
 			// PLAYER
 			Touhou::CreatePlayer(scene, gameArea);
+
 
 			// DUMMY ENEMY
 			Touhou::CreateSmallEnemy(
@@ -61,6 +69,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				)
 			);
 
+
+
 			// UI
 			auto UI = new BigNgine::Entity(
 				BigNgine::Vector2(-600.f, -400.f),
@@ -71,16 +81,30 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			auto UIrenderer = new BigNgine::TextureRendererBehaviour();
 			UIrenderer->SetVertShader(FileSystem::LoadFile("assets/shaders/vert/logo.glsl"));
 			UIrenderer->AddTexture("./assets/img/UI.png");
-			UI->AddBehaviour(UIrenderer);
+			UI->AddBehaviour((BigNgine::Behaviour*)UIrenderer);
 			scene->AddEntity(UI);
 			
-//			FIXME(tmyon): when entity is destroyed Ui stops rendering for one frame
-			auto empty = new BigNgine::Entity();
-			scene->AddEntity(empty);
+			// SCORE
+			auto Score = new BigNgine::Entity(
+				BigNgine::Vector2(790.f, 80.f),
+				0.f,
+				BigNgine::Vector2(0.f, 0.f)
+			);
+			Score->SetDepth(0.0f);
+			ScoreRenderer = new BigNgine::TextRendererBehaviour();
+			Score->AddBehaviour((BigNgine::Behaviour*)ScoreRenderer);
+			ScoreRenderer->SetFont("assets/fonts/MeriendaOne-Regular.ttf");
+			ScoreRenderer->SetFontSize(24);
+			ScoreRenderer->SetText("Score:");
+
+			scene->AddEntity(Score);
+
+			
+
 
 		},
-		[](BigNgine::Scene*, int) -> void {
-			
+		[&ScoreRenderer](BigNgine::Scene*, int) -> void {
+			ScoreRenderer->SetText("Score: " + std::to_string(Touhou::Score::points));
 		}
 	);
 	
@@ -101,7 +125,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			auto backRenderer = new BigNgine::TextureRendererBehaviour();
 			backRenderer->SetVertShader(FileSystem::LoadFile("assets/shaders/vert/logo.glsl"));
 			backRenderer->AddTexture("./assets/img/back.jpg");
-			background->AddBehaviour(backRenderer);
+			background->AddBehaviour((BigNgine::Behaviour*)backRenderer);
 			scene->AddEntity(background);
 			
 			
@@ -215,7 +239,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			scene->AddEntity(discleaimer);
 
 		},
-		[game, gameScene, &option, &startRenderer, &exitRenderer](BigNgine::Scene* scene, int deltaTime) -> void {
+		[&option, &startRenderer, &exitRenderer](BigNgine::Scene* scene, int deltaTime) -> void {
 			if(option == 0){
 				startRenderer->rainbow = 1;
 				exitRenderer->rainbow = 0;

@@ -19,7 +19,7 @@ void Touhou::ShootingBehaviour::Update(int deltaTime) {
 			(void*)boundBox
 		};
 
-		parent->GetParentScene()->AddPrefab(bulletPrefab, args);
+		parent->GetParentScene()->AddPrefabToFront(bulletPrefab, args);
 
 		cooldownTimer = cooldown;
 	}
