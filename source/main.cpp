@@ -162,7 +162,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			Logger::Success("Game started");
 		},
-		[&ScoreRenderer](BigNgine::Scene*, int deltaTime) -> void {
+		[&ScoreRenderer, &hitBoxRenderer](BigNgine::Scene*, int deltaTime) -> void {
 			ScoreRenderer->SetText("Score: " + std::to_string(Touhou::Score::points));
 			hitBoxRenderer->SetActive(Input::Get(BIGNGINE_KEY_LEFT_SHIFT));
 
