@@ -82,19 +82,19 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			Logger::Success("Created player");
 
-			BigNgine::Entity* playerHitbox = new BigNgine::Entity(
-				player->position - player->size / 2.f,
-				0.f,
-				player->size
-			);
+			auto playerHitbox = new BigNgine::Entity(
+                player->position,
+                0.f,
+                player->size * 2
+            );
 
-			playerHitbox->AddBehaviour(new BigNgine::FollowBehaviour(player));
+            playerHitbox->AddBehaviour(new BigNgine::FollowBehaviour(player, BigNgine::Vector2(-player->size.x, -player->size.y)));
+            
+            hitBoxRenderer->AddTexture("assets/img/circle.png");
 
-			hitBoxRenderer->AddTexture("assets/icon/icon.png");
+            playerHitbox->AddBehaviour((BigNgine::Behaviour*)hitBoxRenderer);
 
-			playerHitbox->AddBehaviour((BigNgine::Behaviour*)hitBoxRenderer);
-
-			scene->AddEntity(playerHitbox);
+            scene->AddEntity(playerHitbox);
 
 			// UI
 			auto UI = new BigNgine::Entity(
