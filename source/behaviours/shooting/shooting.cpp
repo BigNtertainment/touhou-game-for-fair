@@ -1,11 +1,15 @@
 #include "shooting.h"
 
 #include "other/createPlayerBullet/createPlayerBullet.h"
+#include "other/gameStatus/gameStatus.h"
 
 Touhou::ShootingBehaviour::ShootingBehaviour(BigNgine::Entity* boundBox) :
 	boundBox(boundBox) {}
 
 void Touhou::ShootingBehaviour::Update(int deltaTime) {
+	if(!GameStatus::running)
+		return;
+
 	if(cooldownTimer > 0.f)
 		cooldownTimer -= deltaTime / 1000.f;
 

@@ -168,7 +168,7 @@ void BigNgine::Game::SetActiveScene(BigNgine::Scene* scene) {
 	}
 
 	if(activeScene != nullptr)
-		delete activeScene;
+		activeScene->Destroy();
 
 	scene->Start();
 

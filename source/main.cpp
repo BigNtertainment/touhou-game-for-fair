@@ -10,6 +10,7 @@
 #include "behaviours/targetPlayer/targetPlayer.h"
 #include "behaviours/shooting/shooting.h"
 #include "behaviours/enemyMovement/enemyMovement.h"
+#include "other/gameStatus/gameStatus.h"
 
 void Start()
 {
@@ -24,12 +25,19 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	auto game = BigNgine::Game::GetInstance();
 
 	auto ScoreRenderer = new BigNgine::TextRendererBehaviour();
+
 	auto gameScene = new BigNgine::Scene(
 		[game, &ScoreRenderer](BigNgine::Scene* scene) -> void {
+			Logger::Log("Starting game");
+
+			Touhou::GameStatus::running = true;
+
 			// GAME AREA
 			const float gameAreaVerticalMargin = 20.f;
 			const float gameAreaHorizontalMargin = 50.f;
 			const float gameAreaWidth = 700.f;
+
+			Logger::Log("Creating game area");
 
 			auto* gameArea = new BigNgine::Entity(
 				BigNgine::Vector2(gameAreaHorizontalMargin - game->GetWindowWidth() / 2.f, gameAreaVerticalMargin - game->GetWindowHeight() / 2.f),
@@ -49,27 +57,39 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			scene->AddEntity(gameArea);
 
+			Logger::Success("Created game area");
+
 			// this prevents player from stuttering 
 			// i hate this 
 			auto empty = new BigNgine::Entity();
 			scene->AddEntity(empty);
 
 			// PLAYER
+			Logger::Log("Creating player");
+
 			BigNgine::Entity* player = Touhou::CreatePlayer(scene, gameArea);
+
+			Logger::Success("Created player");
 
 			BigNgine::Entity* playerHitbox = new BigNgine::Entity(
 				player->position,
 				0.f,
 				player->size
 			);
+
 			playerHitbox->AddBehaviour(new BigNgine::FollowBehaviour(player));
+
 			auto hitBoxRenderer = new BigNgine::TextureRendererBehaviour();
+
 			hitBoxRenderer->AddTexture("assets/icon/icon.png");
+
 			playerHitbox->AddBehaviour((BigNgine::Behaviour*)hitBoxRenderer);
+
 			scene->AddEntity(playerHitbox);
 
-
 			// DUMMY ENEMY
+			Logger::Log("Creating dummy enemy");
+
 			Touhou::CreateSmallEnemy(
 				scene,
 				gameArea,
@@ -84,7 +104,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				}
 			);
 
-
+			Logger::Log("Created dummy enemy");
 
 			// UI
 			auto UI = new BigNgine::Entity(
@@ -92,31 +112,63 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				0.f,
 				BigNgine::Vector2(1200.f,800.f)
 			);
+
 			UI->SetDepth(0.0f);
+
 			auto UIrenderer = new BigNgine::TextureRendererBehaviour();
+
 			UIrenderer->SetVertShader(FileSystem::LoadFile("assets/shaders/vert/logo.glsl"));
 			UIrenderer->AddTexture("./assets/img/UI.png");
+
 			UI->AddBehaviour((BigNgine::Behaviour*)UIrenderer);
+
 			scene->AddEntity(UI);
-			
+
+			// LOSE MENU
+			auto* loseMenu = new BigNgine::Entity(
+				BigNgine::Vector2(game->GetWindowWidth() - 500.f, game->GetWindowHeight()) / 2.f,
+				0.f,
+				BigNgine::Vector2(0.f, 0.f)
+			);
+
+			loseMenu->SetDepth(.1f);
+
+			loseMenu->tag = "LoseMenu";
+
+			loseMenu->SetActive(false);
+
+			BigNgine::TextRendererBehaviour* loseMenuText = new BigNgine::TextRendererBehaviour();
+
+			loseMenuText->SetText("You lose! Press 'z' to go to main menu.");
+
+			loseMenuText->SetFontSize(32);
+
+			loseMenu->AddBehaviour((BigNgine::Behaviour*)loseMenuText);
+
+			scene->AddEntity(loseMenu);
+
+			Touhou::GameStatus::loseMenu = loseMenu;
+
 			// SCORE
 			auto Score = new BigNgine::Entity(
 				BigNgine::Vector2(790.f, 80.f),
 				0.f,
 				BigNgine::Vector2(0.f, 0.f)
 			);
+
 			Score->SetDepth(0.0f);
+
 			ScoreRenderer = new BigNgine::TextRendererBehaviour();
-			Score->AddBehaviour((BigNgine::Behaviour*)ScoreRenderer);
+
 			ScoreRenderer->SetFont("assets/fonts/MeriendaOne-Regular.ttf");
 			ScoreRenderer->SetFontSize(24);
 			ScoreRenderer->SetText("Score:");
 
+			Score->AddBehaviour((BigNgine::Behaviour*)ScoreRenderer);
+
 			scene->AddEntity(Score);
 
-			
-
-
+			Logger::Success("Game started");
 		},
 		[&ScoreRenderer](BigNgine::Scene*, int) -> void {
 			ScoreRenderer->SetText("Score: " + std::to_string(Touhou::Score::points));
@@ -124,11 +176,12 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	);
 	
 	int option = 0;
+	BigNgine::TextRendererBehaviour* menuRenderer;
 	BigNgine::TextRendererBehaviour* exitRenderer;
 	BigNgine::TextRendererBehaviour* startRenderer;
 	auto MainMenu = new BigNgine::Scene(
-		[&option, &exitRenderer, &startRenderer, gameScene, game](BigNgine::Scene* scene) -> void {
-			
+		[&option, &menuRenderer, &exitRenderer, &startRenderer, gameScene, game](BigNgine::Scene* scene) -> void {
+			Logger::Log("loading main menu");
 
 			// BACKGROUND
 			auto background = new BigNgine::Entity(
@@ -142,9 +195,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			backRenderer->AddTexture("./assets/img/back.jpg");
 			background->AddBehaviour((BigNgine::Behaviour*)backRenderer);
 			scene->AddEntity(background);
-			
-			
-			
+
 			// TITLE
 			auto title = new BigNgine::Entity(
 				BigNgine::Vector2(100.f, 20.f),
@@ -207,7 +258,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			exitRenderer->SetText("Exit");
 			scene->AddEntity(exit);
 
-
 			scene->AddCallback(new Input::Callback([&option, gameScene, game](int key, int, int) -> void {
 				switch (key) {
 					case BIGNGINE_KEY_UP:
@@ -233,26 +283,28 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				0.f,
 				BigNgine::Vector2(305.f, 447.f)
 			);
+
 			chimata->SetDepth(0.0f);
 			auto chimataRenderer = new BigNgine::TextureRendererBehaviour();
 			chimata->AddBehaviour((BigNgine::Behaviour*)chimataRenderer);
 			chimataRenderer->AddTexture("./assets/img/chimata_main_menu.png");
+
 			scene->AddEntity(chimata);
 
-
-
-			auto discleaimer = new BigNgine::Entity(
+			auto disclaimer = new BigNgine::Entity(
 				BigNgine::Vector2(5.f, 781.f),
 				0.f,
 				BigNgine::Vector2(0.f, 0.f)
 			);
-			title->SetDepth(0.0f);
+
+			disclaimer->SetDepth(0.0f);
 
 			auto discleaimerRenderer = new BigNgine::TextRendererBehaviour();
-			discleaimer->AddBehaviour((BigNgine::Behaviour*)discleaimerRenderer);
-			discleaimerRenderer->SetText("This game is based off of Touhou Project by Team Shanghai Alice.");
-			scene->AddEntity(discleaimer);
 
+			disclaimer->AddBehaviour((BigNgine::Behaviour*)discleaimerRenderer);
+			discleaimerRenderer->SetText("This game is based off of Touhou Project by Team Shanghai Alice.");
+
+			scene->AddEntity(disclaimer);
 		},
 		[&option, &startRenderer, &exitRenderer](BigNgine::Scene* scene, int deltaTime) -> void {
 			if(option == 0){
@@ -262,10 +314,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				startRenderer->rainbow = 0;
 				exitRenderer->rainbow = 1;
 			}
-
 		}
 	);
- 
+
+	Touhou::GameStatus::mainMenu = MainMenu;
+
 	auto TitleScreen = new BigNgine::Scene(
 		[game](BigNgine::Scene* scene) -> void {
 			Logger::Log("Second scene Loading...");
@@ -284,7 +337,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			Logger::Success("second sceen loaded");
 		},
-		[game, MainMenu](BigNgine::Scene* scene, int deltaTime) -> void {
+		[game, MainMenu](BigNgine::Scene* scene, int) -> void {
 			Logger::Log("Second scene running...");
 			if(scene->GetActiveTime() >= 3500 || Input::Get(BIGNGINE_KEY_SPACE)) {
 				game->SetActiveScene(MainMenu);
@@ -297,7 +350,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			Logger::Log("First scene Loading...");
 			Logger::Success("first sceen loaded");
 		},
-		[game, TitleScreen](BigNgine::Scene* scene, int deltaTime) -> void {
+		[game, TitleScreen](BigNgine::Scene* scene, int) -> void {
 			if(scene->GetActiveTime() >= 1000)
 				game->SetActiveScene(TitleScreen);
 		}
@@ -307,7 +360,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	
 	game->SetName("Touhou - The Kerfuffle of The Lackadaisical Ragamuffin");
 	
-	// TODO: Add a custom icon
 	game->SetIcon("assets/icon/icon.png");
 	
 	Logger::Success("Starting game.");

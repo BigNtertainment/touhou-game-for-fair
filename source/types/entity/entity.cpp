@@ -1,7 +1,14 @@
 #include "entity.h"
 
-BigNgine::Entity::Entity(const BigNgine::Vector2& _position, float _rotation, const BigNgine::Vector2& _size) : position(_position), rotation(_rotation), size(_size), behaviours() {}
-
+BigNgine::Entity::Entity(
+	const BigNgine::Vector2& _position,
+	float _rotation,
+	const BigNgine::Vector2& _size
+) : position(_position),
+	rotation(_rotation),
+	size(_size),
+	behaviours({}),
+	parentScene(nullptr) {}
 
 void BigNgine::Entity::SetDepth(float _depth)
 {
@@ -62,10 +69,14 @@ BigNgine::Entity::~Entity() {
 	for(int i = 0; (unsigned long long) i < behaviours.size(); i++) {
 		delete behaviours[0];
 	}
+
+	// Erase self from parent scene
+	if(parentScene != nullptr) {
+		parentScene->entities.erase(std::remove(parentScene->entities.begin(), parentScene->entities.end(), this), parentScene->entities.end());
+	}
 }
 
 void BigNgine::Entity::operator delete(void* ptr) {
-	// Logger::Log("now i die");
 	if(ptr)
 		free(ptr);
 }

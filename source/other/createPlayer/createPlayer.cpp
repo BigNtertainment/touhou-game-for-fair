@@ -17,8 +17,6 @@ BigNgine::Entity* Touhou::CreatePlayer(BigNgine::Scene* scene, BigNgine::Entity*
 
 	auto* playerCollider = scene->AddPrefab(playerColliderPrefab);
 
-	Logger::Log("playerCollider created");
-
 	playerCollider->AddBehaviour(new BigNgine::FollowBehaviour(player, player->size / 2.f));
 
 	return playerCollider;

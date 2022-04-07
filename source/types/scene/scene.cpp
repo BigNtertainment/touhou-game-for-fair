@@ -42,7 +42,7 @@ void BigNgine::Scene::AddEntityToFront(Entity *entity)
 	entity->parentScene = this;
 	
 	// Add the entity to the scene entities vector
-	entities.insert(entities.begin() + 2, entity);
+	entities.insert(entities.begin() + 4, entity);
 	
 	// If this scene is currently running, call the entity start method
 	if (Game::GetInstance()->GetActiveScene() == this)
@@ -97,6 +97,9 @@ void BigNgine::Scene::Start()
 	world = new b2World(*gravity);
 	activeTime = 0;
 	
+	entities = {};
+	callbacks = {};
+
 	Camera = new BigNgine::Entity();
 	CameraZoom = 1.0f;
 	AddEntity(Camera);
@@ -142,13 +145,11 @@ void BigNgine::Scene::Update(int deltaTime)
 	}
 }
 
-BigNgine::Scene::~Scene()
-{
-	for (auto* entity : entities)
+void BigNgine::Scene::Destroy() {
+	for (int i = 0; i < entities.size(); i++)
 	{
-		delete entity;
-
-		entity = nullptr;
+		// The entity removes itself from the entities array when destroyed
+		delete entities[0];
 	}
 
 	for (auto* callback : callbacks)
@@ -157,9 +158,17 @@ BigNgine::Scene::~Scene()
 
 		callback = nullptr;
 	}
+	
+	entities = {};
+	callbacks = {};
 
 	world = nullptr;
 	gravity = nullptr;
+}
+
+BigNgine::Scene::~Scene()
+{
+	Destroy();
 
 	Scene::scenes.erase(std::remove(Scene::scenes.begin(), Scene::scenes.end(), this), Scene::scenes.end());
 }

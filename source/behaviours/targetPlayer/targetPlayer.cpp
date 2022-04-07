@@ -1,4 +1,7 @@
 #include "targetPlayer.h"
+
+#include "other/gameStatus/gameStatus.h"
+
 #include <corecrt_math.h>
 #include <corecrt_math_defines.h>
 
@@ -14,6 +17,9 @@ void Touhou::TargetPlayerBehaviour::Start()
 
 void Touhou::TargetPlayerBehaviour::Update(int deltaTime)
 {
+	if(!GameStatus::running)
+		return;
+
 	vector = player->position - parent->position;
     angle = atan(vector.y / vector.x) * 180 / M_PI;
 	if(vector.x<0)

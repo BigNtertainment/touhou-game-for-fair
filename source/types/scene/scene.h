@@ -66,6 +66,7 @@ namespace BigNgine {
 
 		void Start();
 		void Update(int deltaTime);
+		void Destroy();
 
 		~Scene();
 
