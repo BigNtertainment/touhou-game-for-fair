@@ -25,9 +25,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	auto game = BigNgine::Game::GetInstance();
 
 	auto ScoreRenderer = new BigNgine::TextRendererBehaviour();
+	
+	auto hitBoxRenderer = new BigNgine::TextureRendererBehaviour();
 
 	auto gameScene = new BigNgine::Scene(
-		[game, &ScoreRenderer](BigNgine::Scene* scene) -> void {
+		[game, &ScoreRenderer, &hitBoxRenderer](BigNgine::Scene* scene) -> void {
 			Logger::Log("Starting game");
 
 			Touhou::GameStatus::running = true;
@@ -70,23 +72,26 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			BigNgine::Entity* player = Touhou::CreatePlayer(scene, gameArea);
 
 			Logger::Success("Created player");
+			
+			// this prevents player from stuttering
+			// i hate this
+			auto empty2 = new BigNgine::Entity();
+			scene->AddEntity(empty2);
 
-			BigNgine::Entity* playerHitbox = new BigNgine::Entity(
+			auto playerHitbox = new BigNgine::Entity(
 				player->position,
 				0.f,
-				player->size
+				player->size * 2
 			);
 
-			playerHitbox->AddBehaviour(new BigNgine::FollowBehaviour(player));
-
-			auto hitBoxRenderer = new BigNgine::TextureRendererBehaviour();
-
-			hitBoxRenderer->AddTexture("assets/icon/icon.png");
+			playerHitbox->AddBehaviour(new BigNgine::FollowBehaviour(player, BigNgine::Vector2(-player->size.x, -player->size.y)));
+			
+			hitBoxRenderer->AddTexture("assets/img/circle.png");
 
 			playerHitbox->AddBehaviour((BigNgine::Behaviour*)hitBoxRenderer);
 
 			scene->AddEntity(playerHitbox);
-
+			
 			// DUMMY ENEMY
 			Logger::Log("Creating dummy enemy");
 
@@ -170,8 +175,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			Logger::Success("Game started");
 		},
-		[&ScoreRenderer](BigNgine::Scene*, int) -> void {
+		[&ScoreRenderer, &hitBoxRenderer](BigNgine::Scene*, int) -> void {
 			ScoreRenderer->SetText("Score: " + std::to_string(Touhou::Score::points));
+			hitBoxRenderer->SetActive(Input::Get(BIGNGINE_KEY_LEFT_SHIFT));
 		}
 	);
 	
