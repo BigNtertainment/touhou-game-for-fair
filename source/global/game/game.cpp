@@ -74,10 +74,6 @@ void BigNgine::Game::Start(BigNgine::Scene* firstScene, game_startfunc Start, ga
 	// Activate callbacks on key events
 	glfwSetKeyCallback(window, ExecuteCallbacks);
 
-	//	FIXME: if you add entity while game loop is running start functions wont execute!!!
-	//		or you change scene more then once or something it doesnt work
-	//		THE GAME CRASHES
-
 	// For calculating deltaTime
 	clock_t lastTime = 0, currentTime;
 

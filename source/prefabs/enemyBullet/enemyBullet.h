@@ -4,13 +4,15 @@
 #include "types/vector2/vector2.h"
 
 namespace Touhou {
-	class PlayerBullet : public BigNgine::Prefab {
+	class EnemyBullet : public BigNgine::Prefab {
 	public:
-		static const BigNgine::Vector2 bulletSize;
+		std::string texturePath = "./assets/img/bullet1.png";
 
 		/// @brief Creates a new player bullet.
 		/// @param void** Arguments:
 		/// - position (BigNgine::Vector2)
+		/// - size (BigNgine::Vector2)
+		/// - movement angle (float)
 		/// - game area (BigNgine::Entity*)
 		BigNgine::Entity* Create(void** args) override;
 	};

@@ -7,12 +7,16 @@
 void Touhou::CreateSmallEnemy(
 	BigNgine::Scene *scene,
 	BigNgine::Entity *gameArea,
-	Touhou::EnemyMovementBehaviour::MovementFunction movementFunction
+	BigNgine::Entity *player,
+	Touhou::EnemyMovementBehaviour::MovementFunction movementFunction,
+	std::vector<uint16_t> shotIntervals
 ) {
 	auto enemyPrefab = EnemySmall();
 
 	void* args[] = {
-		gameArea
+		gameArea,
+		player,
+		(void*)&shotIntervals
 	};
 
 	scene->AddPrefab(
@@ -31,17 +35,13 @@ void Touhou::CreateSmallEnemy(
 }
 
 Touhou::EnemyMovementBehaviour::MovementFunction Touhou::ComeAndGo(
-	BigNgine::Entity* gameArea,
 	BigNgine::Vector2 target,
 	float speed,
 	float waitTime
 ) {
-	// target = target * gameArea->size;
-
 	const float timeToTarget = target.y / speed;
-	const float timeToLeave = target.x / speed;
 
-	return [target, speed, waitTime, timeToTarget, timeToLeave] (int time) -> BigNgine::Vector2 {
+	return [target, speed, waitTime, timeToTarget] (int time) -> BigNgine::Vector2 {
 		float timeInSeconds = time / 1000.f;
 
 		if(timeInSeconds < timeToTarget) {

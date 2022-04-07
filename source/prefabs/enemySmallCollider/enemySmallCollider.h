@@ -6,7 +6,7 @@
 namespace Touhou {
 	class EnemySmallCollider : public BigNgine::Prefab {
 	public:
-		const float enemyColliderSize = 5.f;
+		const float enemyColliderSize = 25.f;
 
 		/// @brief Creates a new small enemy collider.
 		/// @param void** args Arguments:

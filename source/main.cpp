@@ -6,6 +6,7 @@
 #include "other/createPlayer/createPlayer.h"
 #include "other/createEnemy/createEnemy.h"
 #include "other/score/score.h"
+#include "other/createEnemyBullet/createEnemyBullet.h"
 #include "behaviours/targetPlayer/targetPlayer.h"
 #include "behaviours/shooting/shooting.h"
 #include "behaviours/enemyMovement/enemyMovement.h"
@@ -54,19 +55,22 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			scene->AddEntity(empty);
 
 			// PLAYER
-			Touhou::CreatePlayer(scene, gameArea);
+			BigNgine::Entity* player = Touhou::CreatePlayer(scene, gameArea);
 
 
 			// DUMMY ENEMY
 			Touhou::CreateSmallEnemy(
 				scene,
 				gameArea,
+				player,
 				Touhou::ComeAndGo(
-					gameArea,
 					BigNgine::Vector2(0.3f, 0.3f),
 					0.2f,
-					2.f
-				)
+					5.f
+				),
+				{
+					2, 1, 1
+				}
 			);
 
 

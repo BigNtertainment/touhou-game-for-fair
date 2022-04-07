@@ -4,5 +4,5 @@
 #include "types/entity/entity.h"
 
 namespace Touhou {
-	void CreatePlayer(BigNgine::Scene*, BigNgine::Entity* gameArea);
+	BigNgine::Entity* CreatePlayer(BigNgine::Scene*, BigNgine::Entity* gameArea);
 }

@@ -13,6 +13,8 @@ namespace Touhou {
 		/// @brief Creates a new small enemy.
 		/// @param void** args Arguments:
 		/// - gameArea (BigNgine::Entity*)
+		/// - player (BigNgine::Entity*)
+		/// - shot intervals (std::vector<uint16_t>)
 		BigNgine::Entity* Create(void** args) override;
 	};
 }
