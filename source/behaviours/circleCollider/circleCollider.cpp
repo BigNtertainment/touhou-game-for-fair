@@ -91,8 +91,7 @@ bool Touhou::CircleColliderBehaviour::IsColliding(Touhou::CircleColliderBehaviou
 	// im not getting square root of it because its slow
 	if(collider->parent == nullptr) {
 		Logger::Error("collider has nullptr parent");
-		colliders.erase(std::remove(colliders.begin(), colliders.end(), this), colliders.end());
-		delete this;
+		colliders.erase(std::remove(colliders.begin(), colliders.end(), collider), colliders.end());
 		return false;
 	}
 

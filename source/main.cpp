@@ -36,6 +36,12 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			Touhou::GameStatus::running = true;
 
+			Logger::Log("a");
+
+			Touhou::Score::points = 0;
+
+			Logger::Log("b");
+
 			// GAME AREA
 			const float gameAreaVerticalMargin = 20.f;
 			const float gameAreaHorizontalMargin = 50.f;
@@ -90,25 +96,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			playerHitbox->AddBehaviour((BigNgine::Behaviour*)hitBoxRenderer);
 
 			scene->AddEntity(playerHitbox);
-
-			// // DUMMY ENEMY
-			// Logger::Log("Creating dummy enemy");
-
-			// Touhou::CreateSmallEnemy(
-			// 	scene,
-			// 	gameArea,
-			// 	player,
-			// 	Touhou::ComeAndGo(
-			// 		BigNgine::Vector2(0.3f, 0.3f),
-			// 		0.2f,
-			// 		5.f
-			// 	),
-			// 	{
-			// 		1, 1, 1, 1, 1, 1, 1, 1
-			// 	}
-			// );
-
-			// Logger::Log("Created dummy enemy");
 
 			// UI
 			auto UI = new BigNgine::Entity(

@@ -41,9 +41,9 @@ void BigNgine::Entity::Update(int deltaTime) {
 			continue;
 		}
 
-		behaviours[i]->parent = this;
-
 		if(behaviours[i]->active) {
+			behaviours[i]->parent = this;
+
 			behaviours[i]->Update(deltaTime);
 
 			if(this == nullptr)
