@@ -7,8 +7,6 @@ namespace Touhou {
 	class EnemySmall : public BigNgine::Prefab {
 	public:
 		const BigNgine::Vector2 enemySize = BigNgine::Vector2(57.f, 93.f);
-		// TODO: Change it to an actual enemy texture
-		const std::string enemyTexture = "./assets/img/mariss.png";
 
 		/// @brief Creates a new small enemy.
 		/// @param void** args Arguments:

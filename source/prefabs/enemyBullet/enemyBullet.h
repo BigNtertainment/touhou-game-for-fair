@@ -6,7 +6,7 @@
 namespace Touhou {
 	class EnemyBullet : public BigNgine::Prefab {
 	public:
-		std::string texturePath = "./assets/img/bullet1.png";
+		std::string texturePath = "./assets/img/bullet2.png";
 
 		/// @brief Creates a new player bullet.
 		/// @param void** Arguments:
