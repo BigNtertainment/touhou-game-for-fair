@@ -9,9 +9,12 @@ BigNgine::Entity* Touhou::PlayerBulletCollider::Create(void** args) {
 	BigNgine::Entity* model = (BigNgine::Entity*)args[0];
 
 	BigNgine::Entity* playerBulletCollider = new BigNgine::Entity(
-		model->position + model->size / 2.f,
+		model->position + model->size / 4.f,
 		0.f,
-		model->size / 2.f
+		BigNgine::Vector2(
+			model->size.x / 2.f,
+			model->size.x / 2.f
+		)
 	);
 
 	playerBulletCollider->AddBehaviour(new BulletBehaviour(BigNgine::Vector2(0.0f, 0.0f)));

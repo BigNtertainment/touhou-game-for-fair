@@ -36,6 +36,12 @@ void Touhou::EnemyShootingBehaviour::Shoot() {
 	Logger::Log("shot");
 
 	BigNgine::Vector2 vector = player->position - parent->position;
+	
+	float bulletDirection = atan(vector.y / vector.x) * 180 / M_PI + 90;
+
+	if(vector.x < 0) {
+		bulletDirection += 180;
+	}
 
 	CreateEnemyBullet(
 		parent->GetParentScene(),
@@ -43,6 +49,6 @@ void Touhou::EnemyShootingBehaviour::Shoot() {
 		player,
 		parent->position + BigNgine::Vector2(0.f, parent->size.y / 2.f),
 		bulletSize,
-		atan(vector.y / vector.x) * 180 / M_PI + 90
+		bulletDirection		
 	);
 }

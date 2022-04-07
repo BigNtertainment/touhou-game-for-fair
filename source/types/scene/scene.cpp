@@ -96,8 +96,7 @@ void BigNgine::Scene::Update(int deltaTime)
 
 	size_t size = entities.size();
 
-	
-	for (int i = 0; i < size; i++)
+	for (uint32_t i = 0; i < size; i++)
 	{
 		if(entities[i] == nullptr) {
 			Logger::Error("Entity is nullptr");

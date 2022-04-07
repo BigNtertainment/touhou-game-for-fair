@@ -12,6 +12,7 @@ namespace Touhou {
 		/// @param void** Arguments:
 		/// - position (BigNgine::Vector2)
 		/// - size (BigNgine::Vector2)
+		/// - movement angle (float)
 		/// - game area (BigNgine::Entity*)
 		BigNgine::Entity* Create(void** args) override;
 	};

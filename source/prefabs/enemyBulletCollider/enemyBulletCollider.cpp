@@ -2,8 +2,8 @@
 
 #include "behaviours/circleCollider/circleCollider.h"
 #include "behaviours/targetPlayer/targetPlayer.h"
-#include "behaviours/enemy/enemy.h"
 #include "behaviours/follow/follow.h"
+#include "behaviours/bulletDestruction/bulletDestruction.h"
 
 #include <corecrt_math.h>
 #include <corecrt_math_defines.h>
@@ -35,13 +35,12 @@ BigNgine::Entity* Touhou::EnemyBulletCollider::Create(void **args) {
 
 	collider->name = "enemyBullet_collider";
 
-	collider->SetCallback([collider](CircleColliderBehaviour* other) {
-		Logger::Log(other->GetParent()->tag);
-
+	collider->SetCallback([collider, model](CircleColliderBehaviour* other) {
 		if(other->GetParent()->tag != "PlayerCollider")
 			return;
+		
+		Logger::Log("player death");
 
-		Logger::Log("player died");
 		// Touhou::EnemyBehaviour* enemy = other->GetParent()->GetBehaviour<Touhou::EnemyBehaviour>();
 
 		// if(enemy == nullptr) {
@@ -51,11 +50,16 @@ BigNgine::Entity* Touhou::EnemyBulletCollider::Create(void **args) {
 
 		// enemy->Damage();
 
-		if(collider && collider->GetParent() && collider->GetParent()->GetParentScene())
-			collider->GetParent()->GetParentScene()->RemoveEntity(collider->GetParent());
+		collider->GetParent()->SetActive(false);
+		model->SetActive(false);
 	});
 
-	model->AddBehaviour(new BigNgine::FollowBehaviour(enemyBulletCollider));
+	enemyBulletCollider->AddBehaviour(collider);
+
+	model->AddBehaviour(new BigNgine::FollowBehaviour(
+		enemyBulletCollider,
+		model->size / 2.f
+	));
 
 	return enemyBulletCollider;
 }

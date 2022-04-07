@@ -3,6 +3,7 @@
 #include "behaviours/bullet/bullet.h"
 #include "behaviours/renderer/renderer.h"
 #include "behaviours/bulletDestruction/bulletDestruction.h"
+#include "behaviours/targetPlayer/targetPlayer.h"
 
 #include <cstdlib>
 #include <chrono>

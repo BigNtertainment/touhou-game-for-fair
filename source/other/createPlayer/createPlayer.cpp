@@ -15,11 +15,11 @@ BigNgine::Entity* Touhou::CreatePlayer(BigNgine::Scene* scene, BigNgine::Entity*
 
 	auto playerColliderPrefab = Touhou::PlayerCollider();
 
-	void* playerColliderArgs[] = {
-		gameArea
-	};
+	auto* playerCollider = scene->AddPrefab(playerColliderPrefab);
 
-	return scene->AddPrefab(playerColliderPrefab, playerColliderArgs, [player](BigNgine::Entity* playerCollider) {
-		playerCollider->AddBehaviour(new BigNgine::FollowBehaviour(player, player->size / 2.f - playerCollider->size / 2.f));
-	});
+	Logger::Log("playerCollider created");
+
+	playerCollider->AddBehaviour(new BigNgine::FollowBehaviour(player, player->size / 2.f));
+
+	return playerCollider;
 }
