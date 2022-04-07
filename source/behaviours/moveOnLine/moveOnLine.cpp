@@ -1,4 +1,7 @@
 #include "moveOnLine.h"
+
+#include "other/gameStatus/gameStatus.h"
+
 #include <corecrt_math.h>
 #include <corecrt_math_defines.h>
 
@@ -12,8 +15,11 @@ void Touhou::MoveOnLineBehaviour::Start()
 	}
 }
 
-void Touhou::MoveOnLineBehaviour::Update(int deltaTime)
+void Touhou::MoveOnLineBehaviour::Update(int)
 {
+	if(!GameStatus::running)
+		return;
+
     bullet->direction.x = cos(angle / 180 * M_PI) * (float)pixels_per_second; // cos(parent->rotation) * 50 - sin(parent->rotation) * 50;
 	bullet->direction.y = sin(angle / 180 * M_PI) * (float)pixels_per_second; // sin(parent->rotation) * 50 - cos(parent->rotation) * 50;
     parent->rotation = angle + 90;

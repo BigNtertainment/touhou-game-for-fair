@@ -9,6 +9,7 @@
 #include "behaviours/targetPlayer/targetPlayer.h"
 #include "behaviours/shooting/shooting.h"
 #include "behaviours/enemyMovement/enemyMovement.h"
+#include "other/gameStatus/gameStatus.h"
 
 void Start()
 {
@@ -24,6 +25,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 	auto* gameScene = new BigNgine::Scene(
 		[game](BigNgine::Scene* scene) -> void {
+			Touhou::GameStatus::running = true;
+
 			// GAME AREA
 			const float gameAreaVerticalMargin = 20.f;
 			const float gameAreaHorizontalMargin = 50.f;
@@ -64,8 +67,33 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 					2, 1, 1
 				}
 			);
+
+			// LOSE MENU
+			auto* loseMenu = new BigNgine::Entity(
+				BigNgine::Vector2(game->GetWindowWidth() - 500.f, game->GetWindowHeight()) / 2.f,
+				0.f,
+				BigNgine::Vector2(0.f, 0.f)
+			);
+
+			loseMenu->SetDepth(.1f);
+
+			loseMenu->tag = "LoseMenu";
+
+			loseMenu->SetActive(false);
+
+			BigNgine::TextRendererBehaviour* loseMenuText = new BigNgine::TextRendererBehaviour();
+
+			loseMenuText->SetText("You lose! Press 'z' to go to main menu.");
+
+			loseMenuText->SetFontSize(32);
+
+			loseMenu->AddBehaviour((BigNgine::Behaviour*)loseMenuText);
+
+			scene->AddEntity(loseMenu);
+
+			Touhou::GameStatus::loseMenu = loseMenu;
 		},
-		[](BigNgine::Scene* scene, int deltaTime) -> void {
+		[](BigNgine::Scene*, int) -> void {
 			
 		}
 	);
@@ -74,6 +102,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	BigNgine::TextRendererBehaviour* menuRenderer;
 	auto* MainMenu = new BigNgine::Scene(
 		[&option, &menuRenderer, gameScene, game](BigNgine::Scene* scene) -> void {
+			Logger::Log("loading main menu");
+
 			// TITLE
 			auto* title = new BigNgine::Entity(
 				BigNgine::Vector2(0.f, 0.f),
@@ -86,6 +116,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			titleRenderer->SetFontSize(24);
 			titleRenderer->SetMarginBottom(12);
 			titleRenderer->SetText("Touhou\nThe Kerfuffle\nof\nThe Lackadaisical\nRagamuffin");
+
 			scene->AddEntity(title);
 
 			// MENU
@@ -100,8 +131,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			menuRenderer->SetFontSize(24);
 			menuRenderer->SetMarginBottom(72);
 			menuRenderer->SetText(" Start\n Exit");
-			scene->AddEntity(menu);
 
+			scene->AddEntity(menu);
 
 			scene->AddCallback(new Input::Callback([&option, gameScene, game](int key, int, int) -> void {
 				switch (key) {
@@ -122,20 +153,22 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				}
 			}));
 
-
 			auto* chimata = new BigNgine::Entity(
 				BigNgine::Vector2(100.f, -130.f),
 				0.f,
 				BigNgine::Vector2(305.f, 447.f)
 			);
+
 			chimata->SetDepth(0.0f);
 			auto* chimataRenderer = new BigNgine::TextureRendererBehaviour();
 			chimata->AddBehaviour((BigNgine::Behaviour*)chimataRenderer);
 			chimataRenderer->AddTexture("./assets/img/chimata_main_menu.png");
+
 			scene->AddEntity(chimata);
 
+			Logger::Success("Main menu loaded!");
 		},
-		[game, gameScene, &option, &menuRenderer](BigNgine::Scene* scene, int deltaTime) -> void {
+		[gameScene, &option, &menuRenderer](BigNgine::Scene*, int) -> void {
 			if(option == 0)
 				menuRenderer->SetText(">Start\n Exit");
 			else if(option == 1)
@@ -144,8 +177,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 		}
 	);
 
+	Touhou::GameStatus::mainMenu = MainMenu;
+
 	auto* TitleScreen = new BigNgine::Scene(
-		[game](BigNgine::Scene* scene) -> void {
+		[](BigNgine::Scene* scene) -> void {
 			Logger::Log("Second scene Loading...");
 			auto* title = new BigNgine::Entity(
 				BigNgine::Vector2(-600.f, -400.f),
@@ -162,7 +197,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			scene->AddEntity(title);
 			Logger::Success("second sceen loaded");
 		},
-		[game, MainMenu](BigNgine::Scene* scene, int deltaTime) -> void {
+		[game, MainMenu](BigNgine::Scene* scene, int) -> void {
 			Logger::Log("Second scene running...");
 			if(scene->GetActiveTime() >= 3500 || Input::Get(BIGNGINE_KEY_SPACE)) {
 				game->SetActiveScene(MainMenu);
@@ -171,11 +206,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	);
 
 	auto* load = new BigNgine::Scene(
-		[](BigNgine::Scene* scene) -> void {
+		[](BigNgine::Scene*) -> void {
 			Logger::Log("First scene Loading...");
 			Logger::Success("first sceen loaded");
 		},
-		[game, TitleScreen](BigNgine::Scene* scene, int deltaTime) -> void {
+		[game, TitleScreen](BigNgine::Scene* scene, int) -> void {
 			if(scene->GetActiveTime() >= 1000)
 				game->SetActiveScene(TitleScreen);
 		}
@@ -185,7 +220,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	
 	game->SetName("Touhou - The Kerfuffle of The Lackadaisical Ragamuffin");
 	
-	// TODO: Add a custom icon
 	game->SetIcon("assets/icon/icon.png");
 	
 	Logger::Success("Starting game.");

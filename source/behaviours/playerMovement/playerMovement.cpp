@@ -1,5 +1,7 @@
 #include "playerMovement.h"
 
+#include "other/gameStatus/gameStatus.h"
+
 BigNgine::Vector2 Normalize(BigNgine::Vector2 vector)
 {
 	float length = sqrt(vector.x * vector.x + vector.y * vector.y);
@@ -24,6 +26,9 @@ void Touhou::PlayerMovement::Start()
 }
 
 void Touhou::PlayerMovement::Update(int deltaTime) {
+	if(!GameStatus::running)
+		return;
+
 	BigNgine::Vector2 movementVector = BigNgine::Vector2(
 		Input::Get(BIGNGINE_KEY_RIGHT) - Input::Get(BIGNGINE_KEY_LEFT),
 		Input::Get(BIGNGINE_KEY_DOWN) - Input::Get(BIGNGINE_KEY_UP)

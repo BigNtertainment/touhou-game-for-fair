@@ -4,6 +4,7 @@
 #include "behaviours/targetPlayer/targetPlayer.h"
 #include "behaviours/follow/follow.h"
 #include "behaviours/bulletDestruction/bulletDestruction.h"
+#include "other/gameStatus/gameStatus.h"
 
 #include <corecrt_math.h>
 #include <corecrt_math_defines.h>
@@ -41,6 +42,8 @@ BigNgine::Entity* Touhou::EnemyBulletCollider::Create(void **args) {
 		
 		Logger::Log("player death");
 
+		GameStatus::Lose();
+
 		// Touhou::EnemyBehaviour* enemy = other->GetParent()->GetBehaviour<Touhou::EnemyBehaviour>();
 
 		// if(enemy == nullptr) {
@@ -52,6 +55,7 @@ BigNgine::Entity* Touhou::EnemyBulletCollider::Create(void **args) {
 
 		collider->GetParent()->SetActive(false);
 		model->SetActive(false);
+		other->GetParent()->SetActive(false);
 	});
 
 	enemyBulletCollider->AddBehaviour(collider);

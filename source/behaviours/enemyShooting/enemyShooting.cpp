@@ -1,12 +1,16 @@
 #include "enemyShooting.h"
 
 #include "other/createEnemyBullet/createEnemyBullet.h"
+#include "other/gameStatus/gameStatus.h"
 
 #include <stdint.h>
 #include <corecrt_math.h>
 #include <corecrt_math_defines.h>
 
-const BigNgine::Vector2 Touhou::EnemyShootingBehaviour::bulletSize = BigNgine::Vector2(20.f, 20.f);
+const BigNgine::Vector2 Touhou::EnemyShootingBehaviour::bulletSize = BigNgine::Vector2(
+	20.f,
+	20.f
+);
 
 Touhou::EnemyShootingBehaviour::EnemyShootingBehaviour(
 	BigNgine::Entity* gameArea,
@@ -15,6 +19,9 @@ Touhou::EnemyShootingBehaviour::EnemyShootingBehaviour(
 ) : gameArea(gameArea), player(player), shotIntervals(shotIntervals) {}
 
 void Touhou::EnemyShootingBehaviour::Update(int deltaTime) {
+	if(!GameStatus::running)
+		return;
+
 	timer += deltaTime;
 
 	if(intervalIndex < shotIntervals.size()) {

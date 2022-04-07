@@ -73,6 +73,9 @@ void BigNgine::Scene::Start()
 	world = new b2World(*gravity);
 	activeTime = 0;
 	
+	entities = {};
+	callbacks = {};
+
 	Camera = new BigNgine::Entity();
 	CameraZoom = 1.0f;
 	AddEntity(Camera);
@@ -118,8 +121,7 @@ void BigNgine::Scene::Update(int deltaTime)
 	}
 }
 
-BigNgine::Scene::~Scene()
-{
+void BigNgine::Scene::Destroy() {
 	for (auto* entity : entities)
 	{
 		delete entity;
@@ -133,9 +135,17 @@ BigNgine::Scene::~Scene()
 
 		callback = nullptr;
 	}
+	
+	entities = {};
+	callbacks = {};
 
 	world = nullptr;
 	gravity = nullptr;
+}
+
+BigNgine::Scene::~Scene()
+{
+	Destroy();
 
 	Scene::scenes.erase(std::remove(Scene::scenes.begin(), Scene::scenes.end(), this), Scene::scenes.end());
 }
