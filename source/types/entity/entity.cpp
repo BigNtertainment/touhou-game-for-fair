@@ -23,6 +23,8 @@ void BigNgine::Entity::AddBehaviour(BigNgine::Behaviour * behaviour) {
 
 void BigNgine::Entity::RemoveBehaviour(BigNgine::Behaviour * behaviour) {
 	behaviours.erase(std::remove(behaviours.begin(), behaviours.end(), behaviour), behaviours.end());
+
+	behaviour->parent = nullptr;
 }
 
 void BigNgine::Entity::Start() {

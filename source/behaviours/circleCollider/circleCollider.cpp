@@ -20,6 +20,8 @@ void Touhou::CircleColliderBehaviour::Update(int deltaTime)
 {
 	uint32_t size = colliders.size();
 
+	Logger::Log(1);
+
 	for(uint32_t i = 0; i < size; i++)
 	{
 		CircleColliderBehaviour* collider = colliders[i];
@@ -61,6 +63,8 @@ void Touhou::CircleColliderBehaviour::Update(int deltaTime)
 
 		size = colliders.size();
 	}
+
+	Logger::Log(2);
 }
 
 void Touhou::CircleColliderBehaviour::Destroy()
@@ -74,6 +78,8 @@ void Touhou::CircleColliderBehaviour::Destroy()
 
 bool Touhou::CircleColliderBehaviour::IsColliding(Touhou::CircleColliderBehaviour* collider) const
 {
+	Logger::Log("a");
+
 	if(!active || !collider->active)
 		return false;
 
@@ -90,9 +96,14 @@ bool Touhou::CircleColliderBehaviour::IsColliding(Touhou::CircleColliderBehaviou
 		return false;
 	}
 
+	Logger::Log("b");
+	Logger::Log(parent->position);
+	Logger::Log(collider->parent->position);
+
 	double distance_between_circles_squared = 
 		pow((this->parent->position.x - collider->parent->position.x), 2)
 		+ pow((this->parent->position.y - collider->parent->position.y), 2);
+	Logger::Log("c");
 
 	// checking if distance between centers squared is less then sum of radii squared
 	return distance_between_circles_squared < pow((this->parent->size.x + collider->parent->size.x), 2);
