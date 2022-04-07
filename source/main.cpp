@@ -26,14 +26,12 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	auto game = BigNgine::Game::GetInstance();
 
 	auto ScoreRenderer = new BigNgine::TextRendererBehaviour();
-	
-	auto hitBoxRenderer = new BigNgine::TextureRendererBehaviour();
 
 	BigNgine::Entity* gameArea = nullptr;
 	BigNgine::Entity* player = nullptr;
 
 	auto gameScene = new BigNgine::Scene(
-		[game, &ScoreRenderer, &gameArea, &player, &hitBoxRenderer](BigNgine::Scene* scene) -> void {
+		[game, &ScoreRenderer, &gameArea, &player](BigNgine::Scene* scene) -> void {
 			Logger::Log("Starting game");
 
 			Touhou::GameStatus::running = true;
@@ -82,21 +80,18 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			player = Touhou::CreatePlayer(scene, gameArea);
 
 			Logger::Success("Created player");
-			
-			// this prevents player from stuttering
-			// i hate this
-			auto empty2 = new BigNgine::Entity();
-			scene->AddEntity(empty2);
 
 			BigNgine::Entity* playerHitbox = new BigNgine::Entity(
 				player->position - player->size / 2.f,
 				0.f,
-				player->size * 2
+				player->size
 			);
 
-			playerHitbox->AddBehaviour(new BigNgine::FollowBehaviour(player, BigNgine::Vector2(-player->size.x, -player->size.y)));
-			
-			hitBoxRenderer->AddTexture("assets/img/circle.png");
+			playerHitbox->AddBehaviour(new BigNgine::FollowBehaviour(player));
+
+			auto hitBoxRenderer = new BigNgine::TextureRendererBehaviour();
+
+			hitBoxRenderer->AddTexture("assets/icon/icon.png");
 
 			playerHitbox->AddBehaviour((BigNgine::Behaviour*)hitBoxRenderer);
 
@@ -168,11 +163,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			Logger::Success("Game started");
 		},
-		[&ScoreRenderer, &hitBoxRenderer](BigNgine::Scene*, int deltaTime) -> void {
+		[&ScoreRenderer](BigNgine::Scene*, int deltaTime) -> void {
 			ScoreRenderer->SetText("Score: " + std::to_string(Touhou::Score::points));
-			hitBoxRenderer->SetActive(Input::Get(BIGNGINE_KEY_LEFT_SHIFT));
 
-			Touhou::EnemyWave::Update(deltaTime);
+			if(Touhou::GameStatus::running)
+				Touhou::EnemyWave::Update(deltaTime);
 		}
 	);
 
@@ -187,7 +182,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				0.2f,
 				3.f
 			),
-			{ 1, 1, 1}
+			{ 1, 1, 1 }
 		);
 
 		Touhou::CreateSmallEnemy(
@@ -199,7 +194,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				0.2f,
 				3.f
 			),
-			{ 1, 1, 1}
+			{ 1, 1, 1 }
 		);
 	}, 5.f);
 
@@ -213,7 +208,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				0.2f,
 				3.f
 			),
-			{ 1, 1, 1}
+			{ 1, 1, 1 }
 		);
 		
 		Touhou::CreateSmallEnemy(
@@ -225,7 +220,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				0.2f,
 				3.f
 			),
-			{ 1, 1, 1}
+			{ 1, 1, 1 }
 		);
 
 		Touhou::CreateSmallEnemy(
@@ -237,9 +232,35 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 				0.2f,
 				3.f
 			),
-			{ 1, 1, 1}
+			{ 1, 1, 1 }
 		);
 	}, 3.f);
+
+	auto EnemyWave3 = new Touhou::EnemyWave(gameScene, [&gameArea, &player](BigNgine::Scene* scene) -> void {
+		Touhou::CreateSmallEnemy(
+			scene,
+			gameArea,
+			player,
+			[&gameArea](int time) -> BigNgine::Vector2 {
+				float realTime = time / 1000.f;
+
+				return BigNgine::Vector2((sin(realTime) + 2.f) / 4.f, (100 * realTime + 2.f) / gameArea->size.y);
+			},
+			{ 1, 1, 1, 1 }
+		);
+
+		Touhou::CreateSmallEnemy(
+			scene,
+			gameArea,
+			player,
+			[&gameArea](int time) -> BigNgine::Vector2 {
+				float realTime = time / 1000.f;
+
+				return BigNgine::Vector2(1.f - (sin(realTime) + 2.f) / 4.f, (100 * realTime + 2.f) / gameArea->size.y);
+			},
+			{ 1, 1, 1, 1 }
+		);
+	}, 4.f);
 
 	int option = 0;
 	BigNgine::TextRendererBehaviour* menuRenderer;
@@ -431,6 +452,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 	Logger::Success("Starting game.");
 	
 	game->Start(load, Start, Update);
-	
+
+	// delete EnemyWave, EnemyWave2, EnemyWave3;
+
 	return 0;
 }	 

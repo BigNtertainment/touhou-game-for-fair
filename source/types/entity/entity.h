@@ -41,6 +41,9 @@ namespace BigNgine {
 		///	@param behaviour object that inherited form behaviour
 		void AddBehaviour(Behaviour* behaviour);
 
+
+		void RemoveBehaviour(Behaviour* behaviour);
+
 		///	Get all behaviours of a given type
 		///	@template behaviourType type of behaviour
 		///	@returns vector array with all behaviours of given type

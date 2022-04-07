@@ -21,6 +21,10 @@ void BigNgine::Entity::AddBehaviour(BigNgine::Behaviour * behaviour) {
 	behaviours.push_back(behaviour);
 }
 
+void BigNgine::Entity::RemoveBehaviour(BigNgine::Behaviour * behaviour) {
+	behaviours.erase(std::remove(behaviours.begin(), behaviours.end(), behaviour), behaviours.end());
+}
+
 void BigNgine::Entity::Start() {
 	for(auto & behaviour : behaviours) {
 		if(behaviour->active) {
