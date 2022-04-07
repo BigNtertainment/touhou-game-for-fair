@@ -11,6 +11,7 @@
 #include "behaviours/shooting/shooting.h"
 #include "behaviours/enemyMovement/enemyMovement.h"
 #include "other/gameStatus/gameStatus.h"
+#include "other/enemyWave/enemyWave.h"
 
 void Start()
 {
@@ -26,8 +27,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 	auto ScoreRenderer = new BigNgine::TextRendererBehaviour();
 
+	BigNgine::Entity* gameArea = nullptr;
+	BigNgine::Entity* player = nullptr;
+
 	auto gameScene = new BigNgine::Scene(
-		[game, &ScoreRenderer](BigNgine::Scene* scene) -> void {
+		[game, &ScoreRenderer, &gameArea, &player](BigNgine::Scene* scene) -> void {
 			Logger::Log("Starting game");
 
 			Touhou::GameStatus::running = true;
@@ -39,7 +43,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			Logger::Log("Creating game area");
 
-			auto* gameArea = new BigNgine::Entity(
+			gameArea = new BigNgine::Entity(
 				BigNgine::Vector2(gameAreaHorizontalMargin - game->GetWindowWidth() / 2.f, gameAreaVerticalMargin - game->GetWindowHeight() / 2.f),
 				0.f,
 				BigNgine::Vector2(gameAreaWidth, game->GetWindowHeight() - 2 * gameAreaVerticalMargin)
@@ -67,12 +71,12 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			// PLAYER
 			Logger::Log("Creating player");
 
-			BigNgine::Entity* player = Touhou::CreatePlayer(scene, gameArea);
+			player = Touhou::CreatePlayer(scene, gameArea);
 
 			Logger::Success("Created player");
 
 			BigNgine::Entity* playerHitbox = new BigNgine::Entity(
-				player->position,
+				player->position - player->size / 2.f,
 				0.f,
 				player->size
 			);
@@ -87,24 +91,24 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			scene->AddEntity(playerHitbox);
 
-			// DUMMY ENEMY
-			Logger::Log("Creating dummy enemy");
+			// // DUMMY ENEMY
+			// Logger::Log("Creating dummy enemy");
 
-			Touhou::CreateSmallEnemy(
-				scene,
-				gameArea,
-				player,
-				Touhou::ComeAndGo(
-					BigNgine::Vector2(0.3f, 0.3f),
-					0.2f,
-					5.f
-				),
-				{
-					1, 1, 1, 1, 1, 1, 1, 1, 1
-				}
-			);
+			// Touhou::CreateSmallEnemy(
+			// 	scene,
+			// 	gameArea,
+			// 	player,
+			// 	Touhou::ComeAndGo(
+			// 		BigNgine::Vector2(0.3f, 0.3f),
+			// 		0.2f,
+			// 		5.f
+			// 	),
+			// 	{
+			// 		1, 1, 1, 1, 1, 1, 1, 1
+			// 	}
+			// );
 
-			Logger::Log("Created dummy enemy");
+			// Logger::Log("Created dummy enemy");
 
 			// UI
 			auto UI = new BigNgine::Entity(
@@ -139,7 +143,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			BigNgine::TextRendererBehaviour* loseMenuText = new BigNgine::TextRendererBehaviour();
 
-			loseMenuText->SetText("You lose! Press 'z' to go to main menu.");
+			loseMenuText->SetText("Game over! Press 'z' to go to main menu.");
 
 			loseMenuText->SetFontSize(32);
 
@@ -168,13 +172,82 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			scene->AddEntity(Score);
 
+			Touhou::EnemyWave::Start();
+
 			Logger::Success("Game started");
 		},
-		[&ScoreRenderer](BigNgine::Scene*, int) -> void {
+		[&ScoreRenderer](BigNgine::Scene*, int deltaTime) -> void {
 			ScoreRenderer->SetText("Score: " + std::to_string(Touhou::Score::points));
+
+			Touhou::EnemyWave::Update(deltaTime);
 		}
 	);
-	
+
+	// ENEMY WAVES
+	auto EnemyWave = new Touhou::EnemyWave(gameScene, [&gameArea, &player](BigNgine::Scene* scene) -> void {
+		Touhou::CreateSmallEnemy(
+			scene,
+			gameArea,
+			player,
+			Touhou::ComeAndGo(
+				BigNgine::Vector2(0.4f, 0.3f),
+				0.2f,
+				3.f
+			),
+			{ 1, 1, 1}
+		);
+
+		Touhou::CreateSmallEnemy(
+			scene,
+			gameArea,
+			player,
+			Touhou::ComeAndGo(
+				BigNgine::Vector2(0.6f, 0.3f),
+				0.2f,
+				3.f
+			),
+			{ 1, 1, 1}
+		);
+	}, 5.f);
+
+	auto EnemyWave2 = new Touhou::EnemyWave(gameScene, [&gameArea, &player](BigNgine::Scene* scene) -> void {
+		Touhou::CreateSmallEnemy(
+			scene,
+			gameArea,
+			player,
+			Touhou::ComeAndGo(
+				BigNgine::Vector2(0.3f, 0.3f),
+				0.2f,
+				3.f
+			),
+			{ 1, 1, 1}
+		);
+		
+		Touhou::CreateSmallEnemy(
+			scene,
+			gameArea,
+			player,
+			Touhou::ComeAndGo(
+				BigNgine::Vector2(0.5f, 0.5f),
+				0.2f,
+				3.f
+			),
+			{ 1, 1, 1}
+		);
+
+		Touhou::CreateSmallEnemy(
+			scene,
+			gameArea,
+			player,
+			Touhou::ComeAndGo(
+				BigNgine::Vector2(0.7f, 0.3f),
+				0.2f,
+				3.f
+			),
+			{ 1, 1, 1}
+		);
+	}, 3.f);
+
 	int option = 0;
 	BigNgine::TextRendererBehaviour* menuRenderer;
 	BigNgine::TextRendererBehaviour* exitRenderer;

@@ -18,15 +18,21 @@ BigNgine::Entity* Touhou::EnemySmall::Create(void** args) {
 
 	BigNgine::TextureRendererBehaviour *renderer = new BigNgine::TextureRendererBehaviour();
 
+	renderer->name = "enemy_Renderer";
+
 	renderer->AddTexture("./assets/img/mariss.png");
 
 	enemy->AddBehaviour(renderer);
 
-	enemy->AddBehaviour((BigNgine::Behaviour*)new EnemyShootingBehaviour(
+	auto shooting = new EnemyShootingBehaviour(
 		gameArea,
 		(BigNgine::Entity*)args[1],
 		*(std::vector<uint16_t>*)args[2]
-	));
+	);
+
+	shooting->name = "enemy_Shooting";
+
+	enemy->AddBehaviour((BigNgine::Behaviour*)shooting);
 
 	return enemy;
 }

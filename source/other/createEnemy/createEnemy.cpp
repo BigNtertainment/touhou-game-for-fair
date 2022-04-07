@@ -19,7 +19,7 @@ void Touhou::CreateSmallEnemy(
 		(void*)&shotIntervals
 	};
 
-	scene->AddPrefab(
+	scene->AddPrefabToFront(
 		enemyPrefab, args, [gameArea, scene, &movementFunction] (BigNgine::Entity* model) {
 			auto colliderPrefab = EnemySmallCollider();
 
@@ -29,7 +29,7 @@ void Touhou::CreateSmallEnemy(
 				model
 			};
 
-			scene->AddPrefab(colliderPrefab, args);
+			scene->AddPrefabToFront(colliderPrefab, args);
 		}
 	);
 }

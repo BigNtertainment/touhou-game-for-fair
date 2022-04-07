@@ -35,11 +35,13 @@ void BigNgine::Entity::Update(int deltaTime) {
 
 	uint32_t size = behaviours.size();
 
-	for(int i = 0; i < size; i++) {
+	for(int i = 0; i < size && std::count(parentScene->entities.begin(), parentScene->entities.end(), this) && this != nullptr; i++) {
 		if(behaviours[i] == nullptr) {
 			Logger::Error("Updated behaviour is nullptr");
 			continue;
 		}
+
+		behaviours[i]->parent = this;
 
 		if(behaviours[i]->active) {
 			behaviours[i]->Update(deltaTime);

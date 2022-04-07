@@ -132,16 +132,44 @@ void BigNgine::Scene::Update(int deltaTime)
 
 		BigNgine::Entity* entity = entities[i];
 
+		BigNgine::Entity* next = entities[i + 1];
 
 		entity->Update(deltaTime);
 
-
-		if(entity == nullptr) {
-			i --;
-		}
-
 		// Update size in case the Update function changed it
 		size = entities.size();
+
+		// Check for integrity or something idk
+		if(next != entities[i + 1]) {
+			int index = i;
+
+			bool found = false;
+
+			for(int j = index; j >= 0; j--) {
+				if(entities[j] == next) {
+					found = true;
+					index = j - 1;
+					break;
+				}
+			}
+
+			if(found) {
+				i = index;
+				continue;
+			}
+
+			for(int j = index; j < size; j++) {
+				if(entities[j] == next) {
+					found = true;
+					index = j + 1;
+					break;
+				}
+			}
+
+			if(found) {
+				i = index;
+			}
+		}
 	}
 }
 
