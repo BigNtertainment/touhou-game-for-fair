@@ -21,25 +21,16 @@ void Touhou::GameStatus::Lose() {
 
 	loseMenu->SetActive(true);
 
-	Logger::Log(1);
-
 	BigNgine::Scene* scene = loseMenu->GetParentScene();
 	
 	BigNgine::Scene* menu = mainMenu;
 
-	Logger::Log(2);
-
 	Input::Callback* callback = new Input::Callback([menu](int key, int, int) {
 		if(key != BIGNGINE_KEY_Z)
 			return;
-		
-		Logger::Log("a");
 
 		BigNgine::Game::GetInstance()->SetActiveScene(menu);
-		Logger::Log("b");
 	});
-	Logger::Log(3);
 
 	scene->AddCallback(callback);
-	Logger::Log(4);
 }

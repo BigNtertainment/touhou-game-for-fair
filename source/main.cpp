@@ -25,12 +25,16 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 	auto* gameScene = new BigNgine::Scene(
 		[game](BigNgine::Scene* scene) -> void {
+			Logger::Log("Starting game");
+
 			Touhou::GameStatus::running = true;
 
 			// GAME AREA
 			const float gameAreaVerticalMargin = 20.f;
 			const float gameAreaHorizontalMargin = 50.f;
 			const float gameAreaWidth = 700.f;
+
+			Logger::Log("Creating game area");
 
 			auto* gameArea = new BigNgine::Entity(
 				BigNgine::Vector2(gameAreaHorizontalMargin - game->GetWindowWidth() / 2.f, gameAreaVerticalMargin - game->GetWindowHeight() / 2.f),
@@ -50,10 +54,15 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 
 			scene->AddEntity(gameArea);
 
+			Logger::Success("Created game area");
+
 			// PLAYER
+			Logger::Log("Creating player");
 			BigNgine::Entity* player = Touhou::CreatePlayer(scene, gameArea);
+			Logger::Success("Created player");
 
 			// DUMMY ENEMY
+			Logger::Log("Creating dummy enemy");
 			Touhou::CreateSmallEnemy(
 				scene,
 				gameArea,
@@ -67,6 +76,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 					2, 1, 1
 				}
 			);
+			Logger::Log("Created dummy enemy");
 
 			// LOSE MENU
 			auto* loseMenu = new BigNgine::Entity(
@@ -92,6 +102,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **args)
 			scene->AddEntity(loseMenu);
 
 			Touhou::GameStatus::loseMenu = loseMenu;
+
+			Logger::Success("Game started");
 		},
 		[](BigNgine::Scene*, int) -> void {
 			

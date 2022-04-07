@@ -170,7 +170,6 @@ void BigNgine::Game::SetActiveScene(BigNgine::Scene* scene) {
 
 	scene->Start();
 
-	Logger::Log("a3");
 	activeScene = scene;
 }
 

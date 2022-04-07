@@ -34,6 +34,8 @@ void Touhou::CircleColliderBehaviour::Update(int deltaTime)
 
 		if(collider == nullptr) {
 			Logger::Error("Collider is nullptr");
+			colliders.erase(std::remove(colliders.begin(), colliders.end(), collider), colliders.end());
+			i--;
 			continue;
 		}
 

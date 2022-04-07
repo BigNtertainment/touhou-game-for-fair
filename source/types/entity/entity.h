@@ -90,7 +90,7 @@ namespace BigNgine {
 		void operator delete(void* ptr);
 
 	private:
-		Scene* parentScene;
+		Scene* parentScene = nullptr;
 		std::vector<Behaviour*> behaviours = std::vector<Behaviour*>();
 	};
 }

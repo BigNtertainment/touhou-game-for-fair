@@ -122,11 +122,10 @@ void BigNgine::Scene::Update(int deltaTime)
 }
 
 void BigNgine::Scene::Destroy() {
-	for (auto* entity : entities)
+	for (int i = 0; i < entities.size(); i++)
 	{
-		delete entity;
-
-		entity = nullptr;
+		// The entity removes itself from the entities array when destroyed
+		delete entities[0];
 	}
 
 	for (auto* callback : callbacks)
