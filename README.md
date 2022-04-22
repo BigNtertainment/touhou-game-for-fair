@@ -5,8 +5,8 @@ This game is based off of Touhou Project by Team Shanghai Alice.
 
 ---
 
-## Builed files
-[Github realse page](https://github.com/BigNtertainment/touhou-game-for-fair/releases/tag/Touhou)
+## Binaries
+[Github release page](https://github.com/BigNtertainment/touhou-game-for-fair/releases/tag/Touhou)
 
 ---
 
@@ -28,5 +28,5 @@ To run this project, you're going to need:
 - `make all` to compile without using .o files
 
 ## Bugs
-We are aware that the game is buggy and not finished, but for sake of our own sanity we dont plan on fixing it anymore.
+We are aware that the game is buggy and not finished, but for sake of our own sanity we don't plan on fixing it anymore.
 More info can be found [here](https://bigntertainment.github.io/BigNgine).
